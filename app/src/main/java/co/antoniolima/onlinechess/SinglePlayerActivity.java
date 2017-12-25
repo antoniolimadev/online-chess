@@ -20,12 +20,14 @@ public class SinglePlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_player);
 
+        // get gameData and gridView
         gameData = (GameData) getApplication();
         gridViewBoard = findViewById(R.id.gridViewBoard);
         gridViewBoard.setNumColumns(BOARD_WIDTH);
 
         images = gameData.getPieceImages();
         boardPieces = gameData.getBoardPieces();
+
 
         for (Piece piece : boardPieces) {
             if (piece.getColor() == WHITE) {
@@ -34,7 +36,7 @@ public class SinglePlayerActivity extends AppCompatActivity {
                 images[piece.getPosition()] = piece.getIdBlackImage();
             }
         }
-        GridAdapter gridAdapter = new GridAdapter(this, images);
+        GridAdapter gridAdapter = new GridAdapter(this, gameData, images);
         gridViewBoard.setAdapter(gridAdapter);
     }
 }

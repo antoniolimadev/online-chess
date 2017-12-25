@@ -11,20 +11,44 @@ import static co.antoniolima.onlinechess.Constants.WHITE;
 
 public class GameData extends Application{
 
-    ArrayList<Piece> boardPieces;
-    int [] pieceImages;
+    ArrayList<Piece> boardPieces;   // array with all game pieces
+    int [] pieceImages;             // array with all 8x8 images to visually build the chess board
+    Piece selectedPiece;            // piece selected currently, there can be only one
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        pieceImages = new int[BOARD_SIZE];
-        boardPieces = new ArrayList<>();
+        this.pieceImages = new int[BOARD_SIZE];
+        this.boardPieces = new ArrayList<>();
+        this.selectedPiece = null;
         this.initGameData();
     }
 
     public ArrayList<Piece> getBoardPieces() {
         return boardPieces;
+    }
+
+    public boolean isThisPositionTaken(int p){
+
+        for (Piece piece : boardPieces) {
+            if (piece.getPosition() == p)
+                return true;
+        }
+        return false;
+    }
+
+    public Piece getPieceByPosition(int p){
+
+        for (Piece piece : boardPieces) {
+            if (piece.getPosition() == p)
+                return piece;
+        }
+        return null;
+    }
+
+    public void selectPiece(Piece piece){
+        this.selectedPiece = piece;
     }
 
     public int[] getPieceImages() {

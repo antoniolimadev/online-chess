@@ -43,4 +43,5 @@ public final class Constants {
     public static final int DRAWABLE_BLACK_PIECE_QUEEN = R.drawable.queen_black;
     public static final int DRAWABLE_BLACK_PIECE_PAWN = R.drawable.pawn_black;
     public static final int DRAWABLE_EMPTY = R.drawable.empty;
+    public static final int DRAWABLE_SELECTED = R.drawable.selected;
 }

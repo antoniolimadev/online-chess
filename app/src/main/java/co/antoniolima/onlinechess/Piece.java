@@ -1,5 +1,7 @@
 package co.antoniolima.onlinechess;
 
+import static co.antoniolima.onlinechess.Constants.WHITE;
+
 public abstract class Piece {
 
     private int idWhiteImage;
@@ -69,6 +71,15 @@ public abstract class Piece {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getCurrentImageId(){
+
+        if(this.color == WHITE){
+            return this.idWhiteImage;
+        }else{
+            return this.idBlackImage;
+        }
     }
 
     public boolean move() {return true; }

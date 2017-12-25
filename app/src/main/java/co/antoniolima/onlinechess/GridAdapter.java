@@ -1,28 +1,33 @@
 package co.antoniolima.onlinechess;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.BLACK_B;
 import static co.antoniolima.onlinechess.Constants.BLACK_G;
 import static co.antoniolima.onlinechess.Constants.BLACK_R;
-import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.WHITE_B;
 import static co.antoniolima.onlinechess.Constants.WHITE_G;
 import static co.antoniolima.onlinechess.Constants.WHITE_R;
+import static co.antoniolima.onlinechess.Constants.DRAWABLE_SELECTED;
 
-public class GridAdapter extends BaseAdapter{
+public class GridAdapter extends BaseAdapter {
 
     Context context;
+    GameData gameData;
     private final int [] images;
     int x, y;
 
-    public GridAdapter(Context context, int[] images) {
+    public GridAdapter(Context context, GameData gameData, int[] images) {
+        this.gameData = gameData;
         this.context = context;
         this.images = images;
     }
@@ -50,7 +55,6 @@ public class GridAdapter extends BaseAdapter{
 
 //      y = ind/cols
 //      x = ind%cols
-
         y = i/BOARD_WIDTH;
         x = i%BOARD_WIDTH;
 
@@ -68,21 +72,23 @@ public class GridAdapter extends BaseAdapter{
                 imageView.setBackgroundColor(Color.rgb(WHITE_R,WHITE_G,WHITE_B));
             }
         }
-
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                y = i/BOARD_WIDTH;
-                x = i%BOARD_WIDTH;
+                boolean positionTaken = gameData.isThisPositionTaken(i);
 
-                CharSequence text = "Pos: " + x + "," + y;
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                if(positionTaken) {
+                    Piece selectedPiece = gameData.getPieceByPosition(i);
+                    Resources r = context.getResources();
+                    Drawable[] layers = new Drawable[2];
+                    layers[0] = r.getDrawable(selectedPiece.getCurrentImageId());   // imagem que lá está
+                    layers[1] = r.getDrawable(DRAWABLE_SELECTED);                   // borda amarela
+                    LayerDrawable layerDrawable = new LayerDrawable(layers);
+                    imageView.setImageDrawable(layerDrawable);
+                    gameData.selectPiece(selectedPiece);
+                }
             }
         });
-
         return imageView;
     }
 }
