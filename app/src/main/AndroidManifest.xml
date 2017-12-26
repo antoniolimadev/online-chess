@@ -3,7 +3,7 @@
     package="co.antoniolima.onlinechess">
 
     <application
-        android:name="co.antoniolima.onlinechess.GameData"
+        android:name="co.antoniolima.onlinechess.GameController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

@@ -1,64 +1,33 @@
 package co.antoniolima.onlinechess;
 
-import android.app.Application;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static co.antoniolima.onlinechess.Constants.BLACK;
-import static co.antoniolima.onlinechess.Constants.BOARD_SIZE;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_EMPTY;
 import static co.antoniolima.onlinechess.Constants.WHITE;
 
-public class GameData extends Application{
+public class GameData {
 
     ArrayList<Piece> boardPieces;   // array with all game pieces
-    int [] pieceImages;             // array with all 8x8 images to visually build the chess board
-    Piece selectedPiece;            // piece selected currently, there can be only one
+    Piece selectedPiece;    // piece selected currently, there can be only one
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        this.pieceImages = new int[BOARD_SIZE];
+    public GameData (){
         this.boardPieces = new ArrayList<>();
         this.selectedPiece = null;
         this.initGameData();
+        this.selectedPiece = this.boardPieces.get(3);
     }
 
     public ArrayList<Piece> getBoardPieces() {
-        return boardPieces;
+        return this.boardPieces;
     }
 
-    public boolean isThisPositionTaken(int p){
+    public Piece getSelectedPiece(){ return selectedPiece; }
 
-        for (Piece piece : boardPieces) {
-            if (piece.getPosition() == p)
-                return true;
-        }
-        return false;
-    }
-
-    public Piece getPieceByPosition(int p){
-
-        for (Piece piece : boardPieces) {
-            if (piece.getPosition() == p)
-                return piece;
-        }
-        return null;
-    }
-
-    public void selectPiece(Piece piece){
-        this.selectedPiece = piece;
-    }
-
-    public int[] getPieceImages() {
-        return pieceImages;
-    }
+    public void setSelectedPiece(Piece selectedPiece) { this.selectedPiece = selectedPiece; }
 
     public void initGameData(){
-
-        // preenche array de images com images transparentes
-        Arrays.fill(pieceImages, DRAWABLE_EMPTY);
 
         // preenche array de peças com todas as peças na posicao inicial
         this.boardPieces.add(new Rook(BLACK,    0));

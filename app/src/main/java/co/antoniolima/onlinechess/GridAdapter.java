@@ -14,32 +14,30 @@ import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.BLACK_B;
 import static co.antoniolima.onlinechess.Constants.BLACK_G;
 import static co.antoniolima.onlinechess.Constants.BLACK_R;
+import static co.antoniolima.onlinechess.Constants.DRAWABLE_SELECTED;
 import static co.antoniolima.onlinechess.Constants.WHITE_B;
 import static co.antoniolima.onlinechess.Constants.WHITE_G;
 import static co.antoniolima.onlinechess.Constants.WHITE_R;
-import static co.antoniolima.onlinechess.Constants.DRAWABLE_SELECTED;
 
 public class GridAdapter extends BaseAdapter {
 
     Context context;
-    GameData gameData;
-    private final int [] images;
+    GameController gameController;
     int x, y;
 
-    public GridAdapter(Context context, GameData gameData, int[] images) {
-        this.gameData = gameData;
+    public GridAdapter(Context context, GameController gameController) {
+        this.gameController = gameController;
         this.context = context;
-        this.images = images;
     }
 
     @Override
     public int getCount() {
-        return images.length;
+        return this.gameController.getImages().length;
     }
 
     //return cell
     @Override
-    public Object getItem(int i) { return images[i]; }
+    public Object getItem(int i) { return this.gameController.getImage(i); }
 
     @Override
     public long getItemId(int i) {
@@ -50,9 +48,18 @@ public class GridAdapter extends BaseAdapter {
     public View getView(final int i, View view, ViewGroup viewGroup) {
 
         final ImageView imageView = new ImageView(context);
-        imageView.setImageResource(images[i]);
-        imageView.setAdjustViewBounds(true);
 
+        if(this.gameController.getSelectedPiece().getPosition() != i) {
+            imageView.setImageResource(this.gameController.getImage(i));
+        } else {
+            Resources r = context.getResources();
+            Drawable[] layers = new Drawable[2];
+            layers[0] = r.getDrawable(this.gameController.getImage(i)); // imagem que lá está
+            layers[1] = r.getDrawable(DRAWABLE_SELECTED);               // borda amarela
+            LayerDrawable layerDrawable = new LayerDrawable(layers);
+            imageView.setImageDrawable(layerDrawable);
+        }
+        imageView.setAdjustViewBounds(true);
 //      y = ind/cols
 //      x = ind%cols
         y = i/BOARD_WIDTH;
@@ -74,19 +81,8 @@ public class GridAdapter extends BaseAdapter {
         }
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                boolean positionTaken = gameData.isThisPositionTaken(i);
-
-                if(positionTaken) {
-                    Piece selectedPiece = gameData.getPieceByPosition(i);
-                    Resources r = context.getResources();
-                    Drawable[] layers = new Drawable[2];
-                    layers[0] = r.getDrawable(selectedPiece.getCurrentImageId());   // imagem que lá está
-                    layers[1] = r.getDrawable(DRAWABLE_SELECTED);                   // borda amarela
-                    LayerDrawable layerDrawable = new LayerDrawable(layers);
-                    imageView.setImageDrawable(layerDrawable);
-                    gameData.selectPiece(selectedPiece);
-                }
+                gameController.selectPiece(i);
+                notifyDataSetChanged();
             }
         });
         return imageView;

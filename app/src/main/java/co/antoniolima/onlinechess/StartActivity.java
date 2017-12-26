@@ -24,7 +24,7 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String texto = textBox.getText().toString();
-                //gameData.setNome(texto);
+                //gameController.setNome(texto);
 
                 Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
                 startActivity(intent);
