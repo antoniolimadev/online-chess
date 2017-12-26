@@ -14,7 +14,7 @@ import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.BLACK_B;
 import static co.antoniolima.onlinechess.Constants.BLACK_G;
 import static co.antoniolima.onlinechess.Constants.BLACK_R;
-import static co.antoniolima.onlinechess.Constants.DRAWABLE_SELECTED;
+import static co.antoniolima.onlinechess.Constants.DRAWABLE_SELECTED_RED;
 import static co.antoniolima.onlinechess.Constants.WHITE_B;
 import static co.antoniolima.onlinechess.Constants.WHITE_G;
 import static co.antoniolima.onlinechess.Constants.WHITE_R;
@@ -49,13 +49,13 @@ public class GridAdapter extends BaseAdapter {
 
         final ImageView imageView = new ImageView(context);
 
-        if(this.gameController.getSelectedPiece().getPosition() != i) {
+        if(!this.gameController.getHighlightPosition(i)) {
             imageView.setImageResource(this.gameController.getImage(i));
         } else {
             Resources r = context.getResources();
             Drawable[] layers = new Drawable[2];
             layers[0] = r.getDrawable(this.gameController.getImage(i)); // imagem que lá está
-            layers[1] = r.getDrawable(DRAWABLE_SELECTED);               // borda amarela
+            layers[1] = r.getDrawable(DRAWABLE_SELECTED_RED);               // borda amarela
             LayerDrawable layerDrawable = new LayerDrawable(layers);
             imageView.setImageDrawable(layerDrawable);
         }

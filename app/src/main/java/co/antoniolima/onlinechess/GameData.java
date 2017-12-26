@@ -16,7 +16,6 @@ public class GameData {
         this.boardPieces = new ArrayList<>();
         this.selectedPiece = null;
         this.initGameData();
-        this.selectedPiece = this.boardPieces.get(3);
     }
 
     public ArrayList<Piece> getBoardPieces() {

@@ -1,16 +1,10 @@
 package co.antoniolima.onlinechess;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static co.antoniolima.onlinechess.Constants.BOARD_SIZE;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_EMPTY;
-import static co.antoniolima.onlinechess.Constants.DRAWABLE_SELECTED;
 import static co.antoniolima.onlinechess.Constants.WHITE;
 
 public class GameController extends Application{
@@ -24,7 +18,9 @@ public class GameController extends Application{
         super.onCreate();
         this.gameData = new GameData();
         this.images = new int[BOARD_SIZE];
+        this.highlighted = new boolean[BOARD_SIZE];
         this.updateImages();
+        this.resetHighlights();
     }
 
     // if there's a piece on position p
@@ -52,6 +48,7 @@ public class GameController extends Application{
 
         if(isThisPositionTaken(p)) {
             this.gameData.setSelectedPiece(getPieceByPosition(p));
+            this.getSelectedPiece().select(this);
             this.updateImages();
         }
     }
@@ -75,4 +72,14 @@ public class GameController extends Application{
             }
         }
     }
+
+    public void resetHighlights() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            highlighted[i] = false;
+        }
+    }
+
+    public void highlightPosition(int p){ this.highlighted[p] = true; }
+
+    public boolean getHighlightPosition(int p){ return this.highlighted[p]; }
 }

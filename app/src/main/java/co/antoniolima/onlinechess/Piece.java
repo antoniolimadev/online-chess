@@ -81,6 +81,7 @@ public abstract class Piece {
             return this.idBlackImage;
         }
     }
+    public void select(GameController gameController){ }
 
     public boolean move() {return true; }
 }
