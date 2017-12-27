@@ -23,6 +23,13 @@ public class GameController extends Application{
         this.resetHighlights();
     }
 
+    public boolean isThisPositionValid(int p){
+        if(p < 0 || p > BOARD_SIZE-1) {
+            return false;
+        }
+        return true;
+    }
+
     // if there's a piece on position p
     public boolean isThisPositionTaken(int p){
 
