@@ -12,7 +12,8 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean move() {
-        return super.move();
+    public void move(GameController gameController, int p) {
+        gameController.resetHighlights();
+        this.setPosition(p);
     }
 }

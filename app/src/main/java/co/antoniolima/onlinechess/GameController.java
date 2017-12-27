@@ -53,11 +53,18 @@ public class GameController extends Application{
 
     public void selectPiece(int p){
 
+        // se tou a carregar numa peça
         if(isThisPositionTaken(p)) {
             this.gameData.setSelectedPiece(getPieceByPosition(p));
             this.getSelectedPiece().select(this);
-            this.updateImages();
+        }else{
+            // se tou a carregar numa casa vazia e ta uma peça selecionada
+            // move essa peça para essa casa
+            if(this.gameData.getSelectedPiece() != null){
+                this.getSelectedPiece().move(this, p);
+            }
         }
+        this.updateImages();
     }
 
     public int[] getImages() {

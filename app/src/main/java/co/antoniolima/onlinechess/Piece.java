@@ -107,5 +107,5 @@ public abstract class Piece {
 
     public void select(GameController gameController) { }
 
-    public boolean move() {return true; }
+    public void move(GameController gameController, int p) { }
 }

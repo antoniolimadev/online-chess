@@ -37,8 +37,9 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public boolean move() {
+    public void move(GameController gameController, int p) {
         hasMadeFirstMove = true;
-        return true;
+        gameController.resetHighlights();
+        this.setPosition(p);
     }
 }
