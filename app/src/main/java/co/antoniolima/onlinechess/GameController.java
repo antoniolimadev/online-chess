@@ -4,6 +4,7 @@ import android.app.Application;
 import java.util.Arrays;
 
 import static co.antoniolima.onlinechess.Constants.BOARD_SIZE;
+import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_EMPTY;
 import static co.antoniolima.onlinechess.Constants.WHITE;
 
@@ -23,11 +24,24 @@ public class GameController extends Application{
         this.resetHighlights();
     }
 
-    public boolean isThisPositionValid(int p){
-        if(p < 0 || p > BOARD_SIZE-1) {
+//    public boolean isThisPositionValid(int p){
+//        if(p < 0 || p > BOARD_SIZE-1) {
+//            return false;
+//        }
+//        return true;
+//    }
+
+    public boolean isThisPositionValid(Position p){
+
+        if (p.getX() < 0 || p.getX() >= BOARD_WIDTH
+            || p.getY() < 0 || p.getY() >= BOARD_WIDTH) {
             return false;
         }
         return true;
+    }
+
+    public int getUniCoordinate(Position p){
+        return p.getY() * BOARD_WIDTH + p.getX();
     }
 
     // if there's a piece on position p

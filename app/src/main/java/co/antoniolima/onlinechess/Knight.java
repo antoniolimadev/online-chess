@@ -1,5 +1,6 @@
 package co.antoniolima.onlinechess;
 
+import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_BLACK_PIECE_KNIGHT;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_WHITE_PIECE_KNIGHT;
 import static co.antoniolima.onlinechess.Constants.WHITE;
@@ -10,16 +11,35 @@ public class Knight extends Piece {
         super(color, position);
         this.setIdWhiteImage(DRAWABLE_WHITE_PIECE_KNIGHT);
         this.setIdBlackImage(DRAWABLE_BLACK_PIECE_KNIGHT);
-        int [] targetPositions = new int [8];
-        targetPositions[0] = -17;
-        targetPositions[1] = -15;
-        targetPositions[2] = -10;
-        targetPositions[3] = -6;
-        targetPositions[4] = 6;
-        targetPositions[5] = 10;
-        targetPositions[6] = 15;
-        targetPositions[7] = 17;
-        this.setTargetPositionArray(targetPositions);
+        this.initTargetPositions();
+    }
+
+    @Override
+    public void initTargetPositions(){
+        this.resetTargetPositions();
+        int pieceX = this.getPosition()%BOARD_WIDTH;
+        int pieceY = this.getPosition()/BOARD_WIDTH;
+        this.addTargetPosition(new Position(pieceX-1, pieceY-2)); // cima esquerda
+        this.addTargetPosition(new Position(pieceX+1, pieceY-2)); // cima direita
+        this.addTargetPosition(new Position(pieceX+2, pieceY-1)); // direita cima
+        this.addTargetPosition(new Position(pieceX+2, pieceY+1)); // direita baixo
+        this.addTargetPosition(new Position(pieceX+1, pieceY+2)); // baixo direita
+        this.addTargetPosition(new Position(pieceX-1, pieceY+2)); // baixo esquerda
+        this.addTargetPosition(new Position(pieceX-2, pieceY+1)); // esquerda baixo
+        this.addTargetPosition(new Position(pieceX-2, pieceY-1)); // esquerda cima
+    }
+
+    @Override
+    public  void calculateTargetPositions(GameController gameController){
+
+        this.resetAvailablePositions();
+        this.initTargetPositions();
+        // cycle through targets array and check which positions are valid (within the board)
+        for (Position p : this.getTargetPositionsArray()) {
+            if (gameController.isThisPositionValid(p)){
+                p.setValid(true);
+            }
+        }
     }
 
     @Override
@@ -32,14 +52,15 @@ public class Knight extends Piece {
     @Override
     public void select(GameController gameController) {
 
-        this.findAvailablePositions(gameController);
+        this.calculateTargetPositions(gameController);
         gameController.resetHighlights();
-        // select itself
+        // highlight itself
         gameController.highlightPosition(this.getPosition());
-        // cycle through targets array and check which positions are valid (within the board)
-        for (int i = 0; i < this.getTargetPositionsArray().length; i++) {
-            if(gameController.isThisPositionValid(this.getPosition()+this.getTargetPosition(i)))
-                gameController.highlightPosition(this.getPosition()+this.getTargetPosition(i));
+        // highlight valid positions
+        for (Position p : this.getTargetPositionsArray()) {
+            if (p.isValid()){
+                gameController.highlightPosition(gameController.getUniCoordinate(p));
+            }
         }
     }
 

@@ -1,5 +1,7 @@
 package co.antoniolima.onlinechess;
 
+import java.util.ArrayList;
+
 import static co.antoniolima.onlinechess.Constants.BOARD_SIZE;
 import static co.antoniolima.onlinechess.Constants.WHITE;
 
@@ -12,13 +14,14 @@ public abstract class Piece {
     private int x;
     private int y;
     private boolean [] availablePositions;
-    private int [] targetPositions;
+    private ArrayList<Position> targetPositions;
     private String name;
 
     public Piece(boolean color, int position) {
         this.color = color;
         this.position = position;
         this.availablePositions = new boolean[BOARD_SIZE];
+        this.targetPositions = new ArrayList<>();
         this.resetAvailablePositions();
     }
 
@@ -87,11 +90,19 @@ public abstract class Piece {
         }
     }
 
-    public int[] getTargetPositionsArray() { return targetPositions; }
+    public ArrayList<Position> getTargetPositionsArray() {
+        return targetPositions;
+    }
 
-    public int getTargetPosition(int p) { return targetPositions[p]; }
+    public void addTargetPosition(Position newPosition) {
+        this.targetPositions.add(newPosition);
+    }
 
-    public void setTargetPositionArray(int[] targetPositions) { this.targetPositions = targetPositions; }
+    //    public int[] getTargetPositionsArray() { return targetPositions; }
+//
+//    public int getTargetPosition(int p) { return targetPositions[p]; }
+//
+//    public void setTargetPositionArray(int[] targetPositions) { this.targetPositions = targetPositions; }
 
     public boolean getAvailablePosition(int p) { return availablePositions[p]; }
 
@@ -102,6 +113,12 @@ public abstract class Piece {
             availablePositions[i] = false;
         }
     }
+
+    public void initTargetPositions(){ }
+
+    public void calculateTargetPositions (GameController gameController) { }
+
+    public void resetTargetPositions () { this.targetPositions.clear(); }
 
     public void findAvailablePositions(GameController gameController) { }
 
