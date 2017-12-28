@@ -10,12 +10,16 @@ public class Knight extends Piece {
         super(color, position);
         this.setIdWhiteImage(DRAWABLE_WHITE_PIECE_KNIGHT);
         this.setIdBlackImage(DRAWABLE_BLACK_PIECE_KNIGHT);
-        int [] targetPosition = new int [4];
-        targetPosition[0] = -15;
-        targetPosition[1] = -17;
-        targetPosition[2] = 15;
-        targetPosition[3] = 17;
-        this.setTargetPositionArray(targetPosition);
+        int [] targetPositions = new int [8];
+        targetPositions[0] = -17;
+        targetPositions[1] = -15;
+        targetPositions[2] = -10;
+        targetPositions[3] = -6;
+        targetPositions[4] = 6;
+        targetPositions[5] = 10;
+        targetPositions[6] = 15;
+        targetPositions[7] = 17;
+        this.setTargetPositionArray(targetPositions);
     }
 
     @Override
