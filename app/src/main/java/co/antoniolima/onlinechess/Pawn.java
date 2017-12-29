@@ -1,6 +1,8 @@
 package co.antoniolima.onlinechess;
 
+import static co.antoniolima.onlinechess.Constants.BLACK;
 import static co.antoniolima.onlinechess.Constants.BOARD_SIZE;
+import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_BLACK_PIECE_PAWN;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_WHITE_PIECE_PAWN;
 import static co.antoniolima.onlinechess.Constants.WHITE;
@@ -16,22 +18,69 @@ public class Pawn extends Piece {
         this.hasMadeFirstMove = false;
     }
 
-    @Override
-    public void findAvailablePositions(GameController gameController){
-        this.resetAvailablePositions();
+//    @Override
+//    public void findAvailablePositions(GameController gameController){
+//        this.resetAvailablePositions();
+//
+//        // TODO: check if there are pieces in the way and Pawn direction
+//    }
 
-        // TODO: check if there are pieces in the way and Pawn direction
+    @Override
+    public void initTargetPositions(GameController gameController){
+        this.resetTargetPositions();
+        int pieceX = this.getPosition()%BOARD_WIDTH;
+        int pieceY = this.getPosition()/BOARD_WIDTH;
+
+        if(this.getColor() == BLACK) {
+            if (this.hasMadeFirstMove) {
+                this.addTargetPosition(new Position(pieceX, pieceY + 1));
+            } else {
+                this.addTargetPosition(new Position(pieceX, pieceY + 1));
+                this.addTargetPosition(new Position(pieceX, pieceY + 2));
+            }
+        }
+        if(this.getColor() == WHITE) {
+            if (this.hasMadeFirstMove) {
+                this.addTargetPosition(new Position(pieceX, pieceY - 1));
+            } else {
+                this.addTargetPosition(new Position(pieceX, pieceY - 1));
+                this.addTargetPosition(new Position(pieceX, pieceY - 2));
+            }
+        }
+    }
+
+    @Override
+    public void calculateTargetPositions(GameController gameController){
+        this.resetAvailablePositions();
+        this.initTargetPositions(gameController);
+        // cycle through targets array and check which positions are within the board
+        for (Position p : this.getTargetPositionsArray()) {
+            if (gameController.isThisPositionValid(p)){
+                // se ta livre, é valida
+                if (!gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                    p.setValid(true);
+                    // se ta ocupada, vê a cor da peça
+                } else {
+                    // se é diferente, é valida
+                    if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                        p.setValid(true);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void select(GameController gameController) {
-
+        //this.initTargetPositions(gameController);
+        this.calculateTargetPositions(gameController);
         gameController.resetHighlights();
-        gameController.highlightPosition(this.getPosition()); // select itself
-
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            if (this.getAvailablePosition(i) == true){
-                gameController.highlightPosition(i);
+        // highlight itself
+        gameController.highlightPosition(this.getPosition());
+        // highlight valid positions
+        for (Position p : this.getTargetPositionsArray()) {
+            if (p.isValid()){
+                gameController.highlightPosition(gameController.getUniCoordinate(p));
             }
         }
     }
@@ -39,7 +88,17 @@ public class Pawn extends Piece {
     @Override
     public void move(GameController gameController, int p) {
         hasMadeFirstMove = true;
-        gameController.resetHighlights();
-        this.setPosition(p);
+        // verifica se p é uma posicao das validas
+        for (Position pos : this.getTargetPositionsArray()) {
+            if (gameController.getUniCoordinate(pos) == p){
+                gameController.resetHighlights();
+                this.setPosition(p);
+                // se a peça é movida, deixa de estar selecionada
+                gameController.setSelectedPiece(null);
+
+            }
+        }
+        //limpa target positions
+        this.resetTargetPositions();
     }
 }
