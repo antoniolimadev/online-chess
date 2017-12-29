@@ -65,12 +65,24 @@ public class GameController extends Application{
 
     public Piece getSelectedPiece(){ return this.gameData.getSelectedPiece(); }
 
-    public void selectPiece(int p){
+    public void selectPosition(int p){
 
         // se tou a carregar numa peça
         if(isThisPositionTaken(p)) {
-            this.gameData.setSelectedPiece(getPieceByPosition(p));
-            this.getSelectedPiece().select(this);
+            if (this.getSelectedPiece() != null){
+                Piece selectedPiece = this.getSelectedPiece();
+                Piece pieceToCapture = this.getPieceByPosition(p);
+                if (selectedPiece.getColor() != pieceToCapture.getColor()){
+                    selectedPiece.capture(this, pieceToCapture);
+                } else {
+                    this.gameData.setSelectedPiece(getPieceByPosition(p));
+                    this.getSelectedPiece().select(this);
+                }
+            }else {
+                this.gameData.setSelectedPiece(getPieceByPosition(p));
+                this.getSelectedPiece().select(this);
+            }
+
         }else{
             // se tou a carregar numa casa vazia e ta uma peça selecionada
             // move essa peça para essa casa
@@ -93,10 +105,12 @@ public class GameController extends Application{
         Arrays.fill(this.images, DRAWABLE_EMPTY);
 
         for (Piece piece : this.gameData.getBoardPieces()) {
-            if (piece.getColor() == WHITE) {
-                this.images[piece.getPosition()] = piece.getIdWhiteImage();
-            } else {
-                this.images[piece.getPosition()] = piece.getIdBlackImage();
+            if (!piece.isCaptured()) {
+                if (piece.getColor() == WHITE) {
+                    this.images[piece.getPosition()] = piece.getIdWhiteImage();
+                } else {
+                    this.images[piece.getPosition()] = piece.getIdBlackImage();
+                }
             }
         }
     }
@@ -106,6 +120,8 @@ public class GameController extends Application{
             highlighted[i] = false;
         }
     }
+
+    public void deletePiece(Piece piece){ this.gameData.deletePiece(piece); }
 
     public void setSelectedPiece(Piece piece) { this.gameData.setSelectedPiece(piece); }
 

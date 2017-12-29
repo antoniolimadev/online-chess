@@ -81,7 +81,7 @@ public class GridAdapter extends BaseAdapter {
         }
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                gameController.selectPiece(i);
+                gameController.selectPosition(i);
                 notifyDataSetChanged();
             }
         });

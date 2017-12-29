@@ -26,6 +26,8 @@ public class GameData {
 
     public void setSelectedPiece(Piece selectedPiece) { this.selectedPiece = selectedPiece; }
 
+    public void deletePiece(Piece piece){ this.boardPieces.remove(piece); }
+
     public void initGameData(){
 
         // preenche array de peças com todas as peças na posicao inicial

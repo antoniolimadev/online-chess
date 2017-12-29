@@ -15,6 +15,7 @@ public abstract class Piece {
     private int y;
     private boolean [] availablePositions;
     private ArrayList<Position> targetPositions;
+    private boolean captured;
     private String name;
 
     public Piece(boolean color, int position) {
@@ -23,7 +24,12 @@ public abstract class Piece {
         this.availablePositions = new boolean[BOARD_SIZE];
         this.targetPositions = new ArrayList<>();
         this.resetAvailablePositions();
+        this.captured = false;
     }
+
+    public boolean isCaptured() { return captured; }
+
+    public void setCaptured(boolean captured) { this.captured = captured; }
 
     public int getIdWhiteImage() {
         return idWhiteImage;
@@ -125,4 +131,20 @@ public abstract class Piece {
     public void select(GameController gameController) { }
 
     public void move(GameController gameController, int p) { }
+
+    public void capture(GameController gameController, Piece piece) {
+
+        for (Position pos : this.getTargetPositionsArray()) {
+            if (gameController.getUniCoordinate(pos) == piece.getPosition()){
+                gameController.resetHighlights();
+                this.setPosition(piece.getPosition());
+                gameController.deletePiece(piece);
+                // se a peça é movida, deixa de estar selecionada
+                gameController.setSelectedPiece(null);
+            }else {
+                gameController.setSelectedPiece(piece);
+                piece.select(gameController);
+            }
+        }
+    }
 }
