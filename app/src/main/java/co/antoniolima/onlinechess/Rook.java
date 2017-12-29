@@ -150,18 +150,16 @@ public class Rook extends Piece {
 
     @Override
     public void move(GameController gameController, int p) {
-        hasMadeFirstMove = true;
+
         // verifica se p é uma posicao das validas
         for (Position pos : this.getTargetPositionsArray()) {
             if (gameController.getUniCoordinate(pos) == p){
                 gameController.resetHighlights();
                 this.setPosition(p);
+                hasMadeFirstMove = true;
                 // se a peça é movida, deixa de estar selecionada
                 gameController.setSelectedPiece(null);
-
             }
         }
-        //limpa target positions
-        this.resetTargetPositions();
     }
 }

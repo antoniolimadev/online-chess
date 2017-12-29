@@ -237,10 +237,7 @@ public class Queen extends Piece {
                 this.setPosition(p);
                 // se a peça é movida, deixa de estar selecionada
                 gameController.setSelectedPiece(null);
-
             }
         }
-        //limpa target positions
-        this.resetTargetPositions();
     }
 }
