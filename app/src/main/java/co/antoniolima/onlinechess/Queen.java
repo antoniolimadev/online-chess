@@ -10,11 +10,11 @@ public class Queen extends Piece {
         super(color, position);
         this.setIdWhiteImage(DRAWABLE_WHITE_PIECE_QUEEN);
         this.setIdBlackImage(DRAWABLE_BLACK_PIECE_QUEEN);
-        this.initTargetPositions();
+        //this.initTargetPositions();
     }
 
     @Override
-    public void initTargetPositions(){
+    public void initTargetPositions(GameController gameController){
         this.resetTargetPositions();
         int pieceX = this.getPosition()%BOARD_WIDTH;
         int pieceY = this.getPosition()/BOARD_WIDTH;
@@ -28,7 +28,17 @@ public class Queen extends Piece {
         // inicializa a primeira posicao da digonal nordeste a verificar
         x++;
         y--;
+        Position p = new Position(x,y);
         while(x < BOARD_WIDTH && y >= 0){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             x++;
             y--;
@@ -41,6 +51,15 @@ public class Queen extends Piece {
         x++;
         y++;
         while(x < BOARD_WIDTH && y < BOARD_WIDTH){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             x++;
             y++;
@@ -53,6 +72,15 @@ public class Queen extends Piece {
         x--;
         y++;
         while(x >= 0 && y < BOARD_WIDTH){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             x--;
             y++;
@@ -65,6 +93,15 @@ public class Queen extends Piece {
         x--;
         y--;
         while(x >= 0 && y >= 0){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             x--;
             y--;
@@ -77,6 +114,15 @@ public class Queen extends Piece {
         //x++;
         y++;
         while(y < BOARD_WIDTH && y >= 0){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             //x++;
             y++;
@@ -89,6 +135,15 @@ public class Queen extends Piece {
         //x++;
         y--;
         while(y < BOARD_WIDTH && y >= 0){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             //x++;
             y--;
@@ -101,6 +156,15 @@ public class Queen extends Piece {
         x++;
         //y--;
         while(x < BOARD_WIDTH && x >= 0){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             x++;
             //y--;
@@ -113,6 +177,15 @@ public class Queen extends Piece {
         x--;
         //y--;
         while(x < BOARD_WIDTH && x >= 0){
+            p.setY(y);
+            p.setX(x);
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                    this.addTargetPosition(new Position(x, y));
+                    break;
+                }
+                break;
+            }
             this.addTargetPosition(new Position(x, y));
             x--;
             //y--;
@@ -122,7 +195,7 @@ public class Queen extends Piece {
     @Override
     public void calculateTargetPositions(GameController gameController){
         this.resetAvailablePositions();
-        this.initTargetPositions();
+        this.initTargetPositions(gameController);
         // cycle through targets array and check which positions are within the board
         for (Position p : this.getTargetPositionsArray()) {
             if (gameController.isThisPositionValid(p)){
@@ -142,7 +215,7 @@ public class Queen extends Piece {
 
     @Override
     public void select(GameController gameController) {
-
+        this.initTargetPositions(gameController);
         this.calculateTargetPositions(gameController);
         gameController.resetHighlights();
         // highlight itself

@@ -114,7 +114,7 @@ public abstract class Piece {
         }
     }
 
-    public void initTargetPositions(){ }
+    public void initTargetPositions(GameController gameController){ }
 
     public void calculateTargetPositions (GameController gameController) { }
 

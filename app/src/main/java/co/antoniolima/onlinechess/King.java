@@ -13,11 +13,11 @@ public class King extends Piece {
         this.setIdWhiteImage(DRAWABLE_WHITE_PIECE_KING);
         this.setIdBlackImage(DRAWABLE_BLACK_PIECE_KING);
         this.hasMadeFirstMove = false;
-        this.initTargetPositions();
+        //this.initTargetPositions();
     }
 
     @Override
-    public void initTargetPositions(){
+    public void initTargetPositions(GameController gameController){
         this.resetTargetPositions();
         int pieceX = this.getPosition()%BOARD_WIDTH;
         int pieceY = this.getPosition()/BOARD_WIDTH;
@@ -35,7 +35,7 @@ public class King extends Piece {
     public  void calculateTargetPositions(GameController gameController){
 
         this.resetAvailablePositions();
-        this.initTargetPositions();
+        this.initTargetPositions(gameController);
         // cycle through targets array and check which positions are valid (within the board)
         for (Position p : this.getTargetPositionsArray()) {
             if (gameController.isThisPositionValid(p)){
@@ -53,7 +53,7 @@ public class King extends Piece {
 
     @Override
     public void select(GameController gameController) {
-
+        this.initTargetPositions(gameController);
         this.calculateTargetPositions(gameController);
         gameController.resetHighlights();
         // highlight itself
