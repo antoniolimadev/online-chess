@@ -34,10 +34,19 @@ public class Knight extends Piece {
 
         this.resetAvailablePositions();
         this.initTargetPositions();
-        // cycle through targets array and check which positions are valid (within the board)
+        // cycle through targets array and check which positions are within the board
         for (Position p : this.getTargetPositionsArray()) {
             if (gameController.isThisPositionValid(p)){
-                p.setValid(true);
+                // se ta livre, é valida
+                if (!gameController.isThisPositionTaken(gameController.getUniCoordinate(p))){
+                    p.setValid(true);
+                // se ta ocupada, vê a cor da peça
+                } else {
+                    // se é diferente, é valida
+                    if (gameController.getPieceByPosition(gameController.getUniCoordinate(p)).getColor() != this.getColor()){
+                        p.setValid(true);
+                    }
+                }
             }
         }
     }
@@ -66,7 +75,15 @@ public class Knight extends Piece {
 
     @Override
     public void move(GameController gameController, int p) {
-        gameController.resetHighlights();
-        this.setPosition(p);
+
+        // verifica se p é uma posicao das validas
+        for (Position pos : this.getTargetPositionsArray()) {
+            if (gameController.getUniCoordinate(pos) == p){
+                gameController.resetHighlights();
+                this.setPosition(p);
+                // se a peça é movida, deixa de estar selecionada
+                gameController.setSelectedPiece(null);
+            }
+        }
     }
 }

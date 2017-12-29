@@ -76,7 +76,6 @@ public class GameController extends Application{
             // move essa peça para essa casa
             if(this.gameData.getSelectedPiece() != null){
                 this.getSelectedPiece().move(this, p);
-                gameData.setSelectedPiece(null);// Jorge - A peca depois de ser movida deixa de estar selecionada
             }
         }
         this.updateImages();
@@ -107,6 +106,8 @@ public class GameController extends Application{
             highlighted[i] = false;
         }
     }
+
+    public void setSelectedPiece(Piece piece) { this.gameData.setSelectedPiece(piece); }
 
     public void highlightPosition(int p){ this.highlighted[p] = true; }
 
