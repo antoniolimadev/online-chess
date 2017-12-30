@@ -81,8 +81,11 @@ public class GridAdapter extends BaseAdapter {
         }
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                gameController.selectPosition(i);
-                notifyDataSetChanged();
+                // ignora clicks quando é a vez do bot jogar
+                if (!gameController.getCurrentPlayer().isBot()){
+                    gameController.selectPosition(i);
+                    notifyDataSetChanged();
+                }
             }
         });
         return imageView;

@@ -146,5 +146,6 @@ public abstract class Piece {
                 piece.select(gameController);
             }
         }
+        gameController.nextTurn();
     }
 }

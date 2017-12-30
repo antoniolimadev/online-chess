@@ -29,6 +29,9 @@ public final class Constants {
     public static final boolean WHITE = true;
     public static final boolean BLACK = false;
 
+    public static final boolean HUMAN = true;
+    public static final boolean BOT = false;
+
     //images id
     public static final int DRAWABLE_WHITE_PIECE_ROOK = R.drawable.rook_white;
     public static final int DRAWABLE_WHITE_PIECE_BISHOP = R.drawable.bishop_white;

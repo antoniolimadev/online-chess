@@ -10,13 +10,25 @@ import static co.antoniolima.onlinechess.Constants.WHITE;
 public class GameData {
 
     ArrayList<Piece> boardPieces;   // array with all game pieces
-    Piece selectedPiece;    // piece selected currently, there can be only one
+    Piece selectedPiece;            // piece selected currently, there can be only one
+    ArrayList<Player> players;      // player array
+    int turn;
 
     public GameData (){
         this.boardPieces = new ArrayList<>();
         this.selectedPiece = null;
+        this.players = new ArrayList<>();
+        this.turn = 0;
         this.initGameData();
     }
+
+    public ArrayList<Player> getPlayers() { return players; }
+
+    public void setPlayers(ArrayList<Player> players) { this.players = players; }
+
+    public int getTurn() { return turn; }
+
+    public void setTurn(int turn) { this.turn = turn; }
 
     public ArrayList<Piece> getBoardPieces() {
         return this.boardPieces;

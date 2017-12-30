@@ -159,6 +159,8 @@ public class Rook extends Piece {
                 hasMadeFirstMove = true;
                 // se a peça é movida, deixa de estar selecionada
                 gameController.setSelectedPiece(null);
+                // passa o turno
+                gameController.nextTurn();
             }
         }
     }
