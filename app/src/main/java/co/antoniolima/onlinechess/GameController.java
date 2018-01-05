@@ -95,17 +95,19 @@ public class GameController extends Application{
     public Piece getSelectedPiece(){ return this.gameData.getSelectedPiece(); }
 
     public void selectPosition(int p){
-        // se tou a carregar numa peça
+        // se tou a clicar numa peça
         if(isThisPositionTaken(p)) {
             // peça clicada
             Piece clickedPiece = this.getPieceByPosition(p);
-
+            // e ja tava uma selecionada
             if (this.getSelectedPiece() != null){
+                // peça seleciona
                 Piece selectedPiece = this.getSelectedPiece();
-
+                // se forem de cores diferentes, tenta capturar (pode nao ser uma jogada valida)
                 if (selectedPiece.getColor() != clickedPiece.getColor()){
                     selectedPiece.capture(this, clickedPiece); // JOGADA TERMINADA
                 } else {
+                    // se forem da mesma cor, seleciona a nova peça
                     this.gameData.setSelectedPiece(getPieceByPosition(p));
                     this.getSelectedPiece().select(this);
                 }

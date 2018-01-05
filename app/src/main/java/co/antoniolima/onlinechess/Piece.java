@@ -150,11 +150,9 @@ public abstract class Piece {
                 gameController.deletePiece(piece);
                 // se a peça é movida, deixa de estar selecionada
                 gameController.setSelectedPiece(null);
-            }else {
-                gameController.setSelectedPiece(piece);
-                piece.select(gameController);
+                // passa o turno
+                gameController.nextTurn();
             }
         }
-        gameController.nextTurn();
     }
 }
