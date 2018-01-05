@@ -97,18 +97,25 @@ public class GameController extends Application{
     public void selectPosition(int p){
         // se tou a carregar numa peça
         if(isThisPositionTaken(p)) {
+            // peça clicada
+            Piece clickedPiece = this.getPieceByPosition(p);
+
             if (this.getSelectedPiece() != null){
                 Piece selectedPiece = this.getSelectedPiece();
-                Piece pieceToCapture = this.getPieceByPosition(p);
-                if (selectedPiece.getColor() != pieceToCapture.getColor()){
-                    selectedPiece.capture(this, pieceToCapture); // JOGADA TERMINADA
+
+                if (selectedPiece.getColor() != clickedPiece.getColor()){
+                    selectedPiece.capture(this, clickedPiece); // JOGADA TERMINADA
                 } else {
                     this.gameData.setSelectedPiece(getPieceByPosition(p));
                     this.getSelectedPiece().select(this);
                 }
+            // e nao ta nenhuma selecionada previamente
             }else {
-                this.gameData.setSelectedPiece(getPieceByPosition(p));
-                this.getSelectedPiece().select(this);
+                // compara a cor para verificar se pode seleciona-la
+                if (clickedPiece.getColor() == this.getCurrentPlayer().getColor()){
+                    this.gameData.setSelectedPiece(getPieceByPosition(p));
+                    this.getSelectedPiece().select(this);
+                }
             }
         }else{
             // se tou a carregar numa casa vazia e ta uma peça selecionada
