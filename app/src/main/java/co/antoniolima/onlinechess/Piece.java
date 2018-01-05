@@ -104,6 +104,15 @@ public abstract class Piece {
         this.targetPositions.add(newPosition);
     }
 
+    public boolean anyTargetPositionAvailable () {
+        for (Position pos : this.targetPositions) {
+            if (pos.isValid()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //    public int[] getTargetPositionsArray() { return targetPositions; }
 //
 //    public int getTargetPosition(int p) { return targetPositions[p]; }

@@ -12,6 +12,11 @@ public class Player {
         this.type = type;
     }
 
+    public Player(boolean type, boolean color) {
+        this.type = type;
+        this.color = color;
+    }
+
     public String getName() { return name; }
 
     public void setName(String name) {

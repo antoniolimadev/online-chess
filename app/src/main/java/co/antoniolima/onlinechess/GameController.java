@@ -2,9 +2,13 @@ package co.antoniolima.onlinechess;
 
 import android.app.Application;
 import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import static android.content.ContentValues.TAG;
+import static co.antoniolima.onlinechess.Constants.BLACK;
 import static co.antoniolima.onlinechess.Constants.BOARD_SIZE;
 import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.BOT;
@@ -35,16 +39,20 @@ public class GameController extends Application{
         this.gameData.setTurn(this.gameData.getTurn() + 1);
 
         if (this.getCurrentPlayer().isBot()){
-            // TODO: jogada random do bot, escolher e mover/capturar, e actualizar as imagens da gridView
-            Log.i(TAG, "BOT is playing turn " + this.gameData.getTurn());
+            try {
+                this.makeRandomMove();
+                Log.i(TAG, "BOT is playing turn " + this.gameData.getTurn());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             this.gameData.setTurn(this.gameData.getTurn() + 1);
         }
     }
 
     public void newSinglePlayerGame(){
 
-        this.gameData.getPlayers().add(new Player(HUMAN));
-        this.gameData.getPlayers().add(new Player(BOT));
+        this.gameData.getPlayers().add(new Player(HUMAN, WHITE));
+        this.gameData.getPlayers().add(new Player(BOT, BLACK));
     }
 
     public Player getCurrentPlayer(){
@@ -87,9 +95,6 @@ public class GameController extends Application{
     public Piece getSelectedPiece(){ return this.gameData.getSelectedPiece(); }
 
     public void selectPosition(int p){
-
-
-
         // se tou a carregar numa peça
         if(isThisPositionTaken(p)) {
             if (this.getSelectedPiece() != null){
@@ -105,7 +110,6 @@ public class GameController extends Application{
                 this.gameData.setSelectedPiece(getPieceByPosition(p));
                 this.getSelectedPiece().select(this);
             }
-
         }else{
             // se tou a carregar numa casa vazia e ta uma peça selecionada
             // move essa peça para essa casa
@@ -151,4 +155,60 @@ public class GameController extends Application{
     public void highlightPosition(int p){ this.highlighted[p] = true; }
 
     public boolean getHighlightPosition(int p){ return this.highlighted[p]; }
+
+    public GameData getGameData() { return gameData; }
+
+    public int randomNumberGenerator(int min, int max) {
+        long seed1 = System.nanoTime();
+        Random randomGenerator = new Random(seed1);
+
+        int x = randomGenerator.nextInt((max - min) + 1) + min;
+        return x;
+    }
+
+    public void makeRandomMove(){
+        // peças que o bot pode mexer e têm pelo menos uma posicao livre
+        ArrayList<Piece> botPieces = new ArrayList<>();
+        ArrayList<Piece> availableBotPieces = new ArrayList<>();
+
+        // isola as peças do bot
+        for (Piece piece : this.gameData.getBoardPieces()) {
+            if (piece.getColor() == this.getCurrentPlayer().getColor()) {
+                botPieces.add(piece);
+            }
+        }
+
+        for (Piece piece : botPieces) {
+            piece.initTargetPositions(this);
+            piece.calculateTargetPositions(this);
+
+            if (piece.getColor() == this.getCurrentPlayer().getColor() &&
+                    piece.anyTargetPositionAvailable()){                        // e se tem posicoes para mexer
+                availableBotPieces.add(piece);
+            }
+        }
+
+        // escolhe uma peça ao calhas
+        int randPieceIndex = randomNumberGenerator(0, availableBotPieces.size()-1);
+        Piece pieceToMove = availableBotPieces.get(randPieceIndex);
+
+        boolean positionFound = false;
+        int randPosIndex = 0;
+        int tries = 0;
+
+        // procura uma posicao valida ao calhas
+        while (!positionFound){
+            randPosIndex = randomNumberGenerator(0, pieceToMove.getTargetPositionsArray().size()-1);
+            tries++;
+            if(pieceToMove.getTargetPositionsArray().get(randPosIndex).isValid()){
+
+                //pieceToMove.move(this, this.getUniCoordinate(pieceToMove.getTargetPositionsArray().get(randPosIndex)));
+                pieceToMove.setPosition(this.getUniCoordinate(pieceToMove.getTargetPositionsArray().get(randPosIndex)));
+                // se a peça é movida, deixa de estar selecionada
+                this.setSelectedPiece(null);
+                positionFound = true;
+            }
+        }
+        this.updateImages();
+    }
 }
