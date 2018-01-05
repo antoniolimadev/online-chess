@@ -41,6 +41,15 @@ public class Pawn extends Piece {
                     this.addTargetPosition(new Position(pieceX, pieceY + 2));
                 }
             }
+            // check possible target pieces
+            // esquerda
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(new Position(pieceX-1,pieceY+1)))){
+                this.addTargetPosition(new Position(pieceX-1,pieceY+1));
+            }
+            // direita
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(new Position(pieceX+1,pieceY+1)))){
+                this.addTargetPosition(new Position(pieceX+1,pieceY+1));
+            }
         }
         else {
             if (!gameController.isThisPositionTaken(gameController.getUniCoordinate(new Position(pieceX,pieceY-1)))){
@@ -51,6 +60,15 @@ public class Pawn extends Piece {
                         && !gameController.isThisPositionTaken(gameController.getUniCoordinate(new Position(pieceX,pieceY-2)))){
                     this.addTargetPosition(new Position(pieceX, pieceY - 2));
                 }
+            }
+            // check possible target pieces
+            // esquerda
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(new Position(pieceX-1,pieceY-1)))){
+                this.addTargetPosition(new Position(pieceX-1,pieceY-1));
+            }
+            // direita
+            if (gameController.isThisPositionTaken(gameController.getUniCoordinate(new Position(pieceX+1,pieceY-1)))){
+                this.addTargetPosition(new Position(pieceX+1,pieceY-1));
             }
         }
     }
