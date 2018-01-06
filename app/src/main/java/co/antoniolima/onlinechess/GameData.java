@@ -13,6 +13,7 @@ public class GameData {
     Piece selectedPiece;            // piece selected currently, there can be only one
     ArrayList<Player> players;      // player array
     int turn;
+    King[] kingsArray;
 
     public GameData (){
         this.boardPieces = new ArrayList<>();
@@ -20,6 +21,8 @@ public class GameData {
         this.players = new ArrayList<>();
         this.turn = 0;
         this.initGameData();
+        this.kingsArray = new King[2];
+        this.setKingsArray();
     }
 
     public ArrayList<Player> getPlayers() { return players; }
@@ -33,6 +36,32 @@ public class GameData {
     public ArrayList<Piece> getBoardPieces() {
         return this.boardPieces;
     }
+
+    public King[] getKingsArray() {
+        return kingsArray;
+    }
+
+    public void setKingsArray() {
+        int i = 0;
+        for (Piece piece : this.getBoardPieces()){
+            if(piece instanceof King){
+                //kingsArray.add((King)piece);
+                kingsArray[i] = (King) piece;
+                i++;
+            }
+        }
+
+    }
+
+    //    public void sfdfetKingsArray() {
+//        //procura as piece king e coloca no array
+//        for (Piece piece : this.getBoardPieces()){
+//            if(piece instanceof King){
+//                kingsArray.add((King)piece);
+
+//            }
+//        }
+//    }
 
     public Piece getSelectedPiece(){ return selectedPiece; }
 

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Random;
 
 import static android.content.ContentValues.TAG;
@@ -35,6 +36,11 @@ public class GameController extends Application{
     public void nextTurn(){
         this.gameData.setTurn(this.gameData.getTurn() + 1);
 
+
+        Log.i(TAG, "OLA " );
+        //ve se existe algum KING em check
+        this.isKingInCheck();
+
         if (this.getCurrentPlayer().isBot()){
             try {
                 this.makeRandomMove();
@@ -44,6 +50,8 @@ public class GameController extends Application{
             }
             this.gameData.setTurn(this.gameData.getTurn() + 1);
         }
+
+
     }
 
     public void newSinglePlayerGame(){
@@ -222,5 +230,67 @@ public class GameController extends Application{
             }
         }
         this.updateImages();
+    }
+
+//    public void isKingInCheck(){
+//
+//        //percorre o array de kings. para cada king ve se a posicao do mesmo
+//        //e'uma posicao valida para as pecas de outra cor
+//        for(King king : this.gameData.getKingsArray()){//escolhe um king
+//            for(Piece piece : this.gameData.getBoardPieces()){//escolhe peca
+//                if(piece.getColor() != king.getColor()){//se a peca e'de cor diferente
+//                    piece.initTargetPositions(this);//calcula targets para essa peca
+//                    piece.calculateTargetPositions(this);
+//                    for(Position p : piece.getTargetPositionsArray()){//percorre targets da peca
+//                        if(getUniCoordinate(p) == king.getPosition()){//se o king esta nos targets
+//                            king.setCheck(true);
+//                            Log.i(TAG, "A KING is checked " + king.getPosition());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+    public void isKingInCheck(){
+
+        King k;
+        ArrayList<Piece> enemyPiece = new ArrayList<>();
+        Iterator<Piece> iter = enemyPiece.iterator();
+
+        //seleciona king do jogador actual
+        if(getCurrentPlayer().getColor() == (this.gameData.getKingsArray())[0].getColor()) {
+            k=(this.gameData.getKingsArray())[0];
+        }else {
+            k=(this.gameData.getKingsArray())[1];
+        }
+
+        //isola pecas da cor diferente do king
+        for (Piece p : this.gameData.getBoardPieces()){
+            if(p.getColor() != k.getColor())
+                enemyPiece.add(p);
+        }
+
+
+//        //gera targets de cada peça inimiga
+//        for(Piece piece : enemyPiece){
+//            piece.initTargetPositions(this);
+//            piece.calculateTargetPositions(this);
+//        }
+
+        while(iter.hasNext()){
+            Piece piece = iter.next();
+            piece.initTargetPositions(this);
+            piece.calculateTargetPositions(this);
+        }
+
+        //procura se o king e'um target de uma peca inimiga
+        for(Piece p : enemyPiece){
+            if(p.getTargetPositionsArray().contains(k)){
+            k.setCheck(true);
+            Log.i(TAG, "A KING is checked " + k.getPosition());
+            }
+        }
+
     }
 }

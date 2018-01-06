@@ -7,12 +7,14 @@ import static co.antoniolima.onlinechess.Constants.DRAWABLE_WHITE_PIECE_KING;
 public class King extends Piece {
 
     private boolean hasMadeFirstMove;
+    private boolean check;
 
     public King(boolean color, int position) {
         super(color, position);
         this.setIdWhiteImage(DRAWABLE_WHITE_PIECE_KING);
         this.setIdBlackImage(DRAWABLE_BLACK_PIECE_KING);
         this.hasMadeFirstMove = false;
+        this.check = false;
         //this.initTargetPositions();
     }
 
@@ -90,5 +92,13 @@ public class King extends Piece {
                 gameController.nextTurn();
             }
         }
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
     }
 }
