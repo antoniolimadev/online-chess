@@ -7,16 +7,16 @@ import static co.antoniolima.onlinechess.Constants.WHITE;
 
 public abstract class Piece {
 
-    private int idWhiteImage;
-    private int idBlackImage;
-    private int position;
-    private boolean color;
-    private int x;
-    private int y;
-    private boolean [] availablePositions;
-    private ArrayList<Position> targetPositions;
-    private boolean captured;
-    private String name;
+    protected int idWhiteImage;
+    protected int idBlackImage;
+    protected int position;
+    protected boolean color;
+    protected int x;
+    protected int y;
+    protected boolean [] availablePositions;
+    protected ArrayList<Position> targetPositions;
+    protected boolean captured;
+    protected String name;
 
     public Piece(boolean color, int position) {
         this.color = color;

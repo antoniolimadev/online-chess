@@ -8,6 +8,7 @@ public class King extends Piece {
 
     private boolean hasMadeFirstMove;
     private boolean check;
+    private boolean checkMate;
 
     public King(boolean color, int position) {
         super(color, position);
@@ -15,6 +16,7 @@ public class King extends Piece {
         this.setIdBlackImage(DRAWABLE_BLACK_PIECE_KING);
         this.hasMadeFirstMove = false;
         this.check = false;
+        this.checkMate = false;
         //this.initTargetPositions();
     }
 
@@ -101,4 +103,8 @@ public class King extends Piece {
     public void setCheck(boolean check) {
         this.check = check;
     }
+
+    public boolean isCheckMate() { return checkMate; }
+
+    public void setCheckMate(boolean checkMate) { this.checkMate = checkMate; }
 }

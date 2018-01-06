@@ -22,6 +22,7 @@ public class GameController extends Application{
     GameData gameData;
     int [] images;          // array with all 8x8 images to visually build the chess board
     boolean [] highlighted; // if highlighted[5] is true then position 5 is highlighted
+    King [] kingsArray;    // pointers to both Kings
 
     @Override
     public void onCreate() {
@@ -31,9 +32,27 @@ public class GameController extends Application{
         this.highlighted = new boolean[BOARD_SIZE];
         this.updateImages();
         this.resetHighlights();
+        this.kingsArray = new King[2];
+        this.setKingsArray();
+    }
+
+    public void setKingsArray(){
+        int i = 0;
+        for (Piece piece : this.gameData.getBoardPieces()) {
+            if(piece instanceof King){
+                kingsArray[i] = (King) piece;
+                i++;
+            }
+        }
     }
 
     public void nextTurn(){
+
+        if(this.isGameOver()){
+            // TODO: end game properly
+            return;
+        }
+
         this.gameData.setTurn(this.gameData.getTurn() + 1);
 
 
@@ -52,6 +71,15 @@ public class GameController extends Application{
         }
 
 
+    }
+
+    public boolean isGameOver(){
+        for (int i = 0; i < this.kingsArray.length; i++) {
+            if (this.kingsArray[i].isCheckMate()){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void newSinglePlayerGame(){
