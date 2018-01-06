@@ -55,8 +55,6 @@ public class GameController extends Application{
 
         this.gameData.setTurn(this.gameData.getTurn() + 1);
 
-
-        Log.i(TAG, "OLA " );
         //ve se existe algum KING em check
         this.isKingInCheck();
 
@@ -284,7 +282,8 @@ public class GameController extends Application{
 
         King k;
         ArrayList<Piece> enemyPiece = new ArrayList<>();
-        Iterator<Piece> iter = enemyPiece.iterator();
+
+        Log.i(TAG, "OLA " );
 
         //seleciona king do jogador actual
         if(getCurrentPlayer().getColor() == (this.gameData.getKingsArray())[0].getColor()) {
@@ -299,17 +298,10 @@ public class GameController extends Application{
                 enemyPiece.add(p);
         }
 
-
-//        //gera targets de cada peça inimiga
-//        for(Piece piece : enemyPiece){
-//            piece.initTargetPositions(this);
-//            piece.calculateTargetPositions(this);
-//        }
-
+        Iterator<Piece> iter = enemyPiece.iterator();
         while(iter.hasNext()){
-            Piece piece = iter.next();
-            piece.initTargetPositions(this);
-            piece.calculateTargetPositions(this);
+            iter.next().initTargetPositions(this);
+            iter.next().calculateTargetPositions(this);
         }
 
         //procura se o king e'um target de uma peca inimiga
