@@ -52,6 +52,7 @@ public class GameController extends Application{
             // TODO: end game properly
             return;
         }
+        this.checkPawnPromotion();
 
         this.gameData.setTurn(this.gameData.getTurn() + 1);
         Log.i(TAG, "TURNO "+this.gameData.getTurn() );
@@ -75,6 +76,37 @@ public class GameController extends Application{
             }
         }
         return false;
+    }
+
+    public void checkPawnPromotion(){
+
+        ArrayList<Piece> pawns = new ArrayList<>();
+
+        // get all pawns
+        for (Piece piece : this.gameData.getBoardPieces()) {
+            if (piece instanceof Pawn) {
+                pawns.add(piece);
+            }
+        }
+
+        // check if there's any Pawn on the first or last line of the board and return it
+        for (Piece pawn : pawns) {
+            if (pawn.getPosition() < BOARD_WIDTH ||
+                    pawn.getPosition() > (BOARD_SIZE - BOARD_WIDTH - 1)){
+                this.promotePawn(pawn);
+            }
+        }
+    }
+
+    public void promotePawn(Piece pawn){
+
+        int pawnPosition = pawn.getPosition();
+        boolean pawnColor = pawn.getColor();
+
+        this.deletePiece(pawn);
+        this.gameData.getBoardPieces().add(new Queen(pawnColor, pawnPosition));
+
+        this.updateImages();
     }
 
     public void newSinglePlayerGame(){
