@@ -121,6 +121,7 @@ public class Pawn extends Piece {
                 // se a peça é movida, deixa de estar selecionada
                 gameController.setSelectedPiece(null);
                 // passa o turno
+                gameController.isKingInCheck();
                 gameController.nextTurn();
             }
         }

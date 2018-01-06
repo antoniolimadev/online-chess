@@ -157,6 +157,8 @@ public class Bishop extends Piece {
                 // se a peça é movida, deixa de estar selecionada
                 gameController.setSelectedPiece(null);
                 // passa o turno
+                //ve se existe algum KING em check
+                gameController.isKingInCheck();
                 gameController.nextTurn();
             }
         }
