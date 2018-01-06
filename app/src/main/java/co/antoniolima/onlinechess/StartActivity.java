@@ -18,7 +18,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         textBox = findViewById(R.id.editTextPlayerName);
-        myButton = findViewById(R.id.btnNewGame);
+        myButton = findViewById(R.id.btnSinglePlayer);
 
         myButton.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
