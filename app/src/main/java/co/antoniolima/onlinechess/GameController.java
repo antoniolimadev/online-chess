@@ -65,10 +65,7 @@ public class GameController extends Application{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            this.gameData.setTurn(this.gameData.getTurn() + 1);
         }
-
-
     }
 
     public boolean isGameOver(){
@@ -240,16 +237,26 @@ public class GameController extends Application{
 
         boolean positionFound = false;
         int randPosIndex = 0;
-        int tries = 0;
 
         // procura uma posicao valida ao calhas
         while (!positionFound){
             randPosIndex = randomNumberGenerator(0, pieceToMove.getTargetPositionsArray().size()-1);
-            tries++;
             if(pieceToMove.getTargetPositionsArray().get(randPosIndex).isValid()){
 
-                //pieceToMove.move(this, this.getUniCoordinate(pieceToMove.getTargetPositionsArray().get(randPosIndex)));
-                pieceToMove.setPosition(this.getUniCoordinate(pieceToMove.getTargetPositionsArray().get(randPosIndex)));
+                //target position coordinate
+                int targetPositionCoordinate = this.getUniCoordinate(pieceToMove.getTargetPositionsArray().get(randPosIndex));
+
+                // if there's a piece on target
+                if (this.getPieceByPosition(targetPositionCoordinate) != null){
+                    // capture it
+                    pieceToMove.capture(this, this.getPieceByPosition(targetPositionCoordinate)); // JOGADA TERMINADA
+                    // o metodo capture ja avança um turno, nao é preciso chamar this.nextTurn()
+                }
+                else{
+                    // otherwise just move it
+                    pieceToMove.setPosition(targetPositionCoordinate);  // JOGADA TERMINADA
+                    this.nextTurn();
+                }
                 // se a peça é movida, deixa de estar selecionada
                 this.setSelectedPiece(null);
                 positionFound = true;
