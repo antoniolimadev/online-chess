@@ -9,22 +9,36 @@ import android.widget.EditText;
 
 public class StartActivity extends AppCompatActivity {
 
+    GameController gameController;
     EditText textBox;
-    Button myButton;
+    Button buttonSingleplayer;
+    Button buttonLocalMultiplayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        textBox = findViewById(R.id.editTextPlayerName);
-        myButton = findViewById(R.id.btnSinglePlayer);
+        gameController = (GameController) getApplication();
+        //textBox = findViewById(R.id.editTextPlayerName);
+        buttonSingleplayer = findViewById(R.id.btnSinglePlayer);
+        buttonLocalMultiplayer= findViewById(R.id.btnMultiplayerLocal);
 
-        myButton.setOnClickListener( new View.OnClickListener() {
+        buttonSingleplayer.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
-                String texto = textBox.getText().toString();
-                //gameController.setNome(texto);
+            //String texto = textBox.getText().toString();
+            gameController.newSinglePlayerGame();
+
+            Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+            startActivity(intent);
+            }
+        });
+
+        buttonLocalMultiplayer.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+
+                gameController.newLocalMultiPlayerGame();
 
                 Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
                 startActivity(intent);

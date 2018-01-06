@@ -30,9 +30,6 @@ public class GameController extends Application{
         this.highlighted = new boolean[BOARD_SIZE];
         this.updateImages();
         this.resetHighlights();
-        // TODO: no futuro esta funcao deve ser chamada quando o utilizador
-        // TODO: selecionar single player no menu principal
-        this.newSinglePlayerGame();
     }
 
     public void nextTurn(){
@@ -53,6 +50,12 @@ public class GameController extends Application{
 
         this.gameData.getPlayers().add(new Player(HUMAN, WHITE));
         this.gameData.getPlayers().add(new Player(BOT, BLACK));
+    }
+
+    public void newLocalMultiPlayerGame(){
+
+        this.gameData.getPlayers().add(new Player(HUMAN, WHITE));
+        this.gameData.getPlayers().add(new Player(HUMAN, BLACK));
     }
 
     public Player getCurrentPlayer(){
