@@ -22,6 +22,8 @@ public class SinglePlayerActivity extends AppCompatActivity {
         gridViewBoard = findViewById(R.id.gridViewBoard);
         gridViewBoard.setNumColumns(BOARD_WIDTH);
 
+        gameController.setContext(this);
+
         GridAdapter gridAdapter = new GridAdapter(this, gameController);
         gridViewBoard.setAdapter(gridAdapter);
     }

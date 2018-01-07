@@ -1,7 +1,12 @@
 package co.antoniolima.onlinechess;
 
+import android.app.Activity;
 import android.app.Application;
+import android.app.FragmentManager;
+import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +28,8 @@ public class GameController extends Application{
     int [] images;          // array with all 8x8 images to visually build the chess board
     boolean [] highlighted; // if highlighted[5] is true then position 5 is highlighted
     King [] kingsArray;    // pointers to both Kings
+    Context context;
+    Piece selectedRook;      // ponteiro para a Torre usada no roque
 
     @Override
     public void onCreate() {
@@ -34,6 +41,24 @@ public class GameController extends Application{
         this.resetHighlights();
         this.kingsArray = new King[2];
         this.setKingsArray();
+        this.selectedRook = null;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public void dialogRoque(){
+        Activity activity = (Activity) context;
+        FragmentManager fm;
+        RoqueFragment roqueFragment;
+
+        fm = activity.getFragmentManager();
+        roqueFragment = new RoqueFragment();
+
+        RoqueFragment roqueFragment2 = roqueFragment.newInstance(this);
+
+        roqueFragment2.show(fm, "Sample Fragment");
     }
 
     public void setKingsArray(){
@@ -56,8 +81,8 @@ public class GameController extends Application{
 
         this.gameData.setTurn(this.gameData.getTurn() + 1);
         Log.i(TAG, "TURNO "+this.gameData.getTurn() );
-        Log.i(TAG, "king 0" + (this.gameData.getKingsArray())[0].isCheck());
-        Log.i(TAG, "king 1" + (this.gameData.getKingsArray())[1].isCheck());
+        //Log.i(TAG, "king 0" + (this.gameData.getKingsArray())[0].isCheck());
+        //Log.i(TAG, "king 1" + (this.gameData.getKingsArray())[1].isCheck());
 
         if (this.getCurrentPlayer().isBot()){
             try {
@@ -88,7 +113,6 @@ public class GameController extends Application{
                 pawns.add(piece);
             }
         }
-
         // check if there's any Pawn on the first or last line of the board and return it
         for (Piece pawn : pawns) {
             if (pawn.getPosition() < BOARD_WIDTH ||
@@ -107,6 +131,55 @@ public class GameController extends Application{
         this.gameData.getBoardPieces().add(new Queen(pawnColor, pawnPosition));
 
         this.updateImages();
+    }
+
+    public boolean isRoqueValid(Piece king, Piece rook){
+
+        if (!((King) king).hasMadeFirstMove() &&
+            !((Rook) rook).hasMadeFirstMove()){
+            this.selectedRook = rook;
+            // check if cells between them are empty
+            if (rook.getPosition() > king.getPosition()) {  // Torre à direita
+
+                //verifica as 2 posicoes à direita do rei
+                if (!isThisPositionTaken(king.getPosition() + 1) &&
+                    !isThisPositionTaken(king.getPosition() + 2)){
+                    return true;
+                }
+            } else {                                        // Torre à esquerda
+                //verifica as 3 posicoes à direita do rei
+                if (!isThisPositionTaken(king.getPosition() - 1) &&
+                    !isThisPositionTaken(king.getPosition() - 2) &&
+                    !isThisPositionTaken(king.getPosition() - 3)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void executeRoque(){
+
+        Piece king = this.gameData.getSelectedPiece();
+        Piece rook = this.selectedRook;
+
+        // check side
+        if (rook.getPosition() > king.getPosition()){ // Torre à direita
+            king.setPosition(king.getPosition() + 2); // move rei duas casas para a direita
+            rook.setPosition(rook.getPosition() - 2); // move torre duas casas para a esquerda
+        }else{ // Torre à esquerda
+            king.setPosition(king.getPosition() - 2); // move rei duas casas para a esquerda
+            rook.setPosition(rook.getPosition() + 3); // move torre tres casas para a direita
+        }
+        ((King) king).setHasMadeFirstMove(true);
+        ((Rook) rook).setHasMadeFirstMove(true);
+
+        // reset aos ponteiros
+        this.setSelectedPiece(null);
+        this.selectedRook = null;
+        this.resetHighlights();
+        this.updateImages();
+        this.nextTurn();
     }
 
     public void newSinglePlayerGame(){
@@ -165,6 +238,7 @@ public class GameController extends Application{
         if(isThisPositionTaken(p)) {
             // peça clicada
             Piece clickedPiece = this.getPieceByPosition(p);
+
             // e ja tava uma selecionada
             if (this.getSelectedPiece() != null){
                 // peça seleciona
@@ -172,10 +246,26 @@ public class GameController extends Application{
                 // se forem de cores diferentes, tenta capturar (pode nao ser uma jogada valida)
                 if (selectedPiece.getColor() != clickedPiece.getColor()){
                     selectedPiece.capture(this, clickedPiece); // JOGADA TERMINADA
-                } else {
-                    // se forem da mesma cor, seleciona a nova peça
-                    this.gameData.setSelectedPiece(getPieceByPosition(p));
-                    this.getSelectedPiece().select(this);
+                }
+                // se forem da mesma cor
+                else {
+                    // check Roque
+                    if (selectedPiece instanceof King &&
+                        clickedPiece instanceof Rook){
+
+                        if (this.isRoqueValid(selectedPiece, clickedPiece)){
+                            this.dialogRoque();
+                        }else {
+                            // se o roque ja nao é possivel, simplesmente seleciona a Torre
+                            this.gameData.setSelectedPiece(getPieceByPosition(p));
+                            this.getSelectedPiece().select(this);
+                        }
+
+                    } else {
+                        // seleciona a nova peça
+                        this.gameData.setSelectedPiece(getPieceByPosition(p));
+                        this.getSelectedPiece().select(this);
+                    }
                 }
             // e nao ta nenhuma selecionada previamente
             }else {
@@ -226,6 +316,8 @@ public class GameController extends Application{
     public void deletePiece(Piece piece){ this.gameData.deletePiece(piece); }
 
     public void setSelectedPiece(Piece piece) { this.gameData.setSelectedPiece(piece); }
+
+    public Piece getSelectedRook() { return this.selectedRook; }
 
     public void highlightPosition(int p){ this.highlighted[p] = true; }
 

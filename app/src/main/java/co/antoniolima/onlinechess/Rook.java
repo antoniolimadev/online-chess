@@ -165,4 +165,12 @@ public class Rook extends Piece {
             }
         }
     }
+
+    public boolean hasMadeFirstMove() {
+        return hasMadeFirstMove;
+    }
+
+    public void setHasMadeFirstMove(boolean hasMadeFirstMove) {
+        this.hasMadeFirstMove = hasMadeFirstMove;
+    }
 }

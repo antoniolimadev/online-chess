@@ -97,6 +97,10 @@ public class King extends Piece {
         }
     }
 
+    public boolean hasMadeFirstMove() { return hasMadeFirstMove; }
+
+    public void setHasMadeFirstMove(boolean hasMadeFirstMove) { this.hasMadeFirstMove = hasMadeFirstMove; }
+
     public boolean isCheck() {
         return check;
     }
