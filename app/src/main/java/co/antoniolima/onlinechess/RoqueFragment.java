@@ -74,11 +74,13 @@ public class RoqueFragment extends DialogFragment {
 
                 case DialogInterface.BUTTON_NEUTRAL:
                     gameController.executeRoque();
+                    gameController.updateBoard();
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
                     // se o roque nao é executado, fica a torre selecionada
                     gameController.getSelectedRook().select(gameController);
+                    gameController.updateBoard();
                     break;
             }
         }

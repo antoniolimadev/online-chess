@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import java.io.ObjectInputStream;
@@ -44,6 +45,7 @@ public class GameController extends Application{
     private boolean [] highlighted; // if highlighted[5] is true then position 5 is highlighted
     private King [] kingsArray;    // pointers to both Kings
     private Context context;
+    private GridAdapter gridViewBoard;
     private Piece selectedRook;      // ponteiro para a Torre usada no roque
     // ONLINE
     private boolean what;
@@ -84,6 +86,8 @@ public class GameController extends Application{
     public void setContext(Context context) {
         this.context = context;
     }
+
+    public void setGridViewBoard(GridAdapter gridViewBoard) { this.gridViewBoard = gridViewBoard; }
 
     public void dialogRoque(){
         Activity activity = (Activity) context;
@@ -465,7 +469,13 @@ public class GameController extends Application{
         return false;
     }
 
-    //////////////////////////////// ONLINE ////////////////////////////////
+    public void updateBoard() {
+
+        this.gridViewBoard.notifyDataSetChanged();
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////// ONLINE /////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean isWhat() {
         return what;
