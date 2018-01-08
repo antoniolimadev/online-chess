@@ -1,10 +1,12 @@
 package co.antoniolima.onlinechess;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +16,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java.util.Locale;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -82,6 +99,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_help:
                 fragment = new HelpFragment();
                 break;
+            case R.id.nav_stats:
+                fragment = new StatsFragment();
+                break;
+            case R.id.nav_language:
+                languageDialog();
+                break;
         }
 
         if(fragment != null){
@@ -104,5 +127,43 @@ public class MainActivity extends AppCompatActivity
 
         return true;
 
+    }
+
+    public void languageDialog(){
+
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(R.string.language);
+        String[] types = {"English", "Portuguese"};
+        b.setItems(types, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                switch(which){
+                    case 0:
+                        setLocale("en");
+                        break;
+                    case 1:
+                        setLocale("pt");
+                        break;
+                }
+            }
+
+        });
+
+        b.show();
+    }
+
+    public void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        Intent refresh = new Intent(this, MainActivity.class);
+        startActivity(refresh);
+        finish();
     }
 }

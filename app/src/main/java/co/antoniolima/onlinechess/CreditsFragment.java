@@ -22,6 +22,6 @@ public class CreditsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("Credits");
+        getActivity().setTitle(R.string.credits);
     }
 }

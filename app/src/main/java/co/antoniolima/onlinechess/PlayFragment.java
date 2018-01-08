@@ -28,7 +28,7 @@ public class PlayFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle("Play");
+        getActivity().setTitle(R.string.play);
 
         gameController = (GameController) getActivity().getApplication();
         buttonSingleplayer = getActivity().findViewById(R.id.btnSinglePlayer);
