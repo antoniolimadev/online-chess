@@ -46,5 +46,6 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
         GridAdapter gridAdapter = new GridAdapter(this, gameController);
         gridViewBoard.setAdapter(gridAdapter);
+        gameController.setGridViewBoard(gridAdapter);
     }
 }
