@@ -32,6 +32,15 @@ public final class Constants {
     public static final boolean HUMAN = true;
     public static final boolean BOT = false;
 
+    public static final boolean SERVER = true;
+    public static final boolean CLIENT = false;
+
+    public static final boolean ONLINE = true;
+    public static final boolean OFFLINE = false;
+
+    public static final int PORT = 8899;
+    //public static final int PORT = 9988; // 2 emulators
+
     //images id
     public static final int DRAWABLE_WHITE_PIECE_ROOK = R.drawable.rook_white;
     public static final int DRAWABLE_WHITE_PIECE_BISHOP = R.drawable.bishop_white;

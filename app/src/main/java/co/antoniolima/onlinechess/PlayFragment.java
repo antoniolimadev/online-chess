@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 
+import static co.antoniolima.onlinechess.Constants.CLIENT;
+import static co.antoniolima.onlinechess.Constants.SERVER;
+
 
 public class PlayFragment extends Fragment {
 
@@ -18,6 +21,8 @@ public class PlayFragment extends Fragment {
     EditText textBox;
     Button buttonSingleplayer;
     Button buttonLocalMultiplayer;
+    Button buttonCreateOnlineGame;
+    Button buttonJoinOnlineGame;
 
     @Nullable
     @Override
@@ -33,6 +38,8 @@ public class PlayFragment extends Fragment {
         gameController = (GameController) getActivity().getApplication();
         buttonSingleplayer = getActivity().findViewById(R.id.btnSinglePlayer);
         buttonLocalMultiplayer= getActivity().findViewById(R.id.btnMultiplayerLocal);
+        buttonCreateOnlineGame = getActivity().findViewById(R.id.btnCreateGame);
+        buttonJoinOnlineGame = getActivity().findViewById(R.id.btnJoinGame);
 
         buttonSingleplayer.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
@@ -51,6 +58,26 @@ public class PlayFragment extends Fragment {
                 gameController.newLocalMultiPlayerGame();
 
                 Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonCreateOnlineGame.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+
+                gameController.setWhat(SERVER);
+                gameController.newLocalMultiPlayerGame();
+                Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonJoinOnlineGame.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+
+                gameController.setWhat(CLIENT);
+                gameController.newLocalMultiPlayerGame();
+                Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
                 startActivity(intent);
             }
         });

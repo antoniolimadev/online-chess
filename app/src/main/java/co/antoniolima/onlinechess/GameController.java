@@ -4,12 +4,25 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -20,16 +33,31 @@ import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.BOT;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_EMPTY;
 import static co.antoniolima.onlinechess.Constants.HUMAN;
+import static co.antoniolima.onlinechess.Constants.OFFLINE;
+import static co.antoniolima.onlinechess.Constants.SERVER;
 import static co.antoniolima.onlinechess.Constants.WHITE;
 
 public class GameController extends Application{
 
-    GameData gameData;
-    int [] images;          // array with all 8x8 images to visually build the chess board
-    boolean [] highlighted; // if highlighted[5] is true then position 5 is highlighted
-    King [] kingsArray;    // pointers to both Kings
-    Context context;
-    Piece selectedRook;      // ponteiro para a Torre usada no roque
+    private GameData gameData;
+    private int [] images;          // array with all 8x8 images to visually build the chess board
+    private boolean [] highlighted; // if highlighted[5] is true then position 5 is highlighted
+    private King [] kingsArray;    // pointers to both Kings
+    private Context context;
+    private Piece selectedRook;      // ponteiro para a Torre usada no roque
+    // ONLINE
+    private boolean what;
+    private boolean onlineStatus;
+    private ObjectInputStream input; // recebe informacao
+    private ObjectOutputStream output; // envia informacao
+
+    private Handler procMsg;
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
+    private Socket socketGame;
+    private int test;
+    private Message readClientMessage;
+    private Message readServerMessage;
 
     @Override
     public void onCreate() {
@@ -42,6 +70,15 @@ public class GameController extends Application{
         this.kingsArray = new King[2];
         this.setKingsArray();
         this.selectedRook = null;
+        // ONLINE
+        this.onlineStatus = OFFLINE;
+        this.what = SERVER;
+        this.readClientMessage = null;
+        this.readServerMessage = null;
+        this.procMsg = null;
+        this.serverSocket = null;
+        this.clientSocket = null;
+        this.socketGame = null;
     }
 
     public void setContext(Context context) {
@@ -426,5 +463,247 @@ public class GameController extends Application{
         }
         k.setCheck(false);
         return false;
+    }
+
+    //////////////////////////////// ONLINE ////////////////////////////////
+
+    public boolean isWhat() {
+        return what;
+    }
+
+    public void setWhat(boolean what) {
+        this.what = what;
+    }
+
+    public Message getReadClientMessage() { return readClientMessage; }
+
+    public Message getReadServerMessage() { return readServerMessage; }
+
+    public void setReadServerMessage(Message readServerMessage) { this.readServerMessage = readServerMessage; }
+
+    public void setReadClientMessage(Message readClientMessage) { this.readClientMessage = readClientMessage; }
+
+    public void runServer() {
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    serverSocket = new ServerSocket(8899);
+                    socketGame = serverSocket.accept();
+
+                    commThreadServer.start();
+//                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    socketGame = null;
+                }
+//                procMsg.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                        if (socketGame == null) {
+//
+//                            procMsg.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//
+//                                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    startActivity(intent);
+//                                }
+//                            });
+//                            return;
+//                        }
+//                    }
+//                });
+            }
+        });
+        t.start();
+    }
+
+    Thread commThreadServer = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                input = new ObjectInputStream(socketGame.getInputStream());
+                output = new ObjectOutputStream(socketGame.getOutputStream());
+
+                //recebe info do cliente
+                readClientMessage = (Message) input.readObject();
+
+                output.writeObject(new Message("Ola do Servidor"));
+                output.flush();
+
+                Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+                //envia info para cliente
+//                Message resposta = new Message("Recebi " + readClient.getText());
+//                output.writeObject(resposta);
+                output.flush();
+
+//                try {
+//                    procMsg.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //AQUI QUE INICIO O TABULEIRO
+//                            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                } catch (Exception e2) {
+//                    procMsg.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(getApplicationContext(), "Fim do Jogo", Toast.LENGTH_LONG).show();
+//                        }
+//                    });
+//                }
+
+
+//                while (!Thread.currentThread().isInterrupted()) {
+//                    final GameInformation readClientMoves = (GameInformation) input.readObject();
+//                    setChanges(readClientMoves);
+//
+//                    procMsg.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //TODO: logica
+//
+//
+//
+//                            MultiplayerOnlineBoardActivity.updateBoard();
+//                        }
+//                    });
+//                }
+            } catch (final Exception e) {
+                procMsg.post(new Runnable() {
+                    @Override
+
+                    public void run() {
+                        Log.e("MYAPP", "exception", e);
+                    }
+                });
+            }
+        }
+    });
+
+    public void runClient(final String strIP, final int Port) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.d("RPS", "Connecting to the server  " + strIP);
+                    socketGame = new Socket(strIP, Port);
+                } catch (Exception e) {
+                    socketGame = null;
+                }
+                if (socketGame == null) {
+//                    procMsg.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//                            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                    return;
+                }
+                commThreadClient.start();
+            }
+        });
+        t.start();
+    }
+
+
+
+    Thread commThreadClient = new Thread(new Runnable() {
+
+        @Override
+        public void run() {
+            try {
+                output = new ObjectOutputStream(socketGame.getOutputStream());
+                input = new ObjectInputStream(socketGame.getInputStream());
+
+                //Envia a info do cliente
+                output.writeObject(new Message("Ola do Cliente"));
+                output.flush();
+                //recebe info do servidor
+                readServerMessage = (Message) input.readObject();
+
+                Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+//                try {
+//                    procMsg.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent);
+//                        }
+//                    });
+//                } catch (Exception e2) {
+//                    procMsg.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(getApplicationContext(), "Fim do Jogo", Toast.LENGTH_LONG).show();
+//                        }
+//                    });
+//                }
+
+
+//                while (!Thread.currentThread().isInterrupted()) {
+//                    final GameInformation readServerMoves = (GameInformation) input.readObject();
+//                    setChanges(readServerMoves);
+//
+//                    procMsg.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //TODO:logica
+//
+//                            MultiplayerOnlineBoardActivity.updateBoard();
+//                        }
+//                    });
+//                }
+            } catch (final Exception e) {
+                procMsg.post(new Runnable() {
+                    @Override
+
+                    public void run() {
+                        Log.e("MYAPP", "exception", e);
+                    }
+                });
+            }
+        }
+    });
+
+    @Nullable
+    public String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface
+                    .getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf
+                        .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()
+                            && inetAddress instanceof Inet4Address) {
+                        return inetAddress.getHostAddress();
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }
