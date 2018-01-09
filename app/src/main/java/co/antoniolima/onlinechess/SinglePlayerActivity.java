@@ -8,6 +8,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
+import static co.antoniolima.onlinechess.Constants.ONLINE;
 import static co.antoniolima.onlinechess.Constants.SERVER;
 
 public class SinglePlayerActivity extends AppCompatActivity {
@@ -28,20 +29,17 @@ public class SinglePlayerActivity extends AppCompatActivity {
         gridViewBoard.setNumColumns(BOARD_WIDTH);
         gameController.setContext(this);
 
-        whatAmI.setText("OFFLINE");
         if (gameController.isWhat() == SERVER){
-            //whatAmI.setText("SERVER");
-            if (gameController.getReadClientMessage() != null){ // le a msg do cliente
-
-                whatAmI.setText(gameController.getReadClientMessage().getText());
-            }
+            whatAmI.setText("SERVER");
+//            if (gameController.getReadClientMessage() != null){ // le a msg do cliente
+//                whatAmI.setText(gameController.getReadClientMessage().getText());
+//            }
 
         } else {
-            //whatAmI.setText("CLIENTE");
-            if (gameController.getReadServerMessage() != null){  // le a msg do servidor
-
-                whatAmI.setText(gameController.getReadServerMessage().getText());
-            }
+            whatAmI.setText("CLIENTE");
+//            if (gameController.getReadServerMessage() != null){  // le a msg do servidor
+//                whatAmI.setText(gameController.getReadServerMessage().getText());
+//            }
         }
 
         GridAdapter gridAdapter = new GridAdapter(this, gameController);

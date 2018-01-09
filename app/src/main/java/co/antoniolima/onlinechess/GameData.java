@@ -90,12 +90,12 @@ public class GameData {
         this.boardPieces.add(new Pawn(WHITE, 15));
 
         this.boardPieces.add(new Rook(WHITE,    56));
-//        this.boardPieces.add(new Knight(WHITE,  57));
-//        this.boardPieces.add(new Bishop(WHITE,  58));
-//        this.boardPieces.add(new Queen(WHITE,   59));
+        this.boardPieces.add(new Knight(WHITE,  57));
+        this.boardPieces.add(new Bishop(WHITE,  58));
+        this.boardPieces.add(new Queen(WHITE,   59));
         this.boardPieces.add(new King(WHITE,    60));
-//        this.boardPieces.add(new Bishop(WHITE,  61));
-//        this.boardPieces.add(new Knight(WHITE,  62));
+        this.boardPieces.add(new Bishop(WHITE,  61));
+        this.boardPieces.add(new Knight(WHITE,  62));
         this.boardPieces.add(new Rook(WHITE,    63));
         this.boardPieces.add(new Pawn(WHITE, 48));
         this.boardPieces.add(new Pawn(WHITE, 49));
