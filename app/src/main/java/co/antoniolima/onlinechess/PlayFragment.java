@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 import static co.antoniolima.onlinechess.Constants.CLIENT;
+import static co.antoniolima.onlinechess.Constants.ONLINE;
 import static co.antoniolima.onlinechess.Constants.SERVER;
 
 
@@ -67,6 +68,7 @@ public class PlayFragment extends Fragment {
 
                 gameController.setWhat(SERVER);
                 gameController.newLocalMultiPlayerGame();
+                gameController.setOnlineStatus(ONLINE);
                 Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
                 startActivity(intent);
             }
@@ -77,6 +79,7 @@ public class PlayFragment extends Fragment {
 
                 gameController.setWhat(CLIENT);
                 gameController.newLocalMultiPlayerGame();
+                gameController.setOnlineStatus(ONLINE);
                 Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
                 startActivity(intent);
             }
