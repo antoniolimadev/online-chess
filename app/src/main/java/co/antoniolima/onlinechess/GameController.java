@@ -5,13 +5,9 @@ import android.app.Application;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
-import android.widget.GridView;
-import android.widget.Toast;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -57,7 +53,6 @@ public class GameController extends Application{
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private Socket socketGame;
-    private int test;
     private Message readClientMessage;
     private Message readServerMessage;
 
@@ -81,26 +76,11 @@ public class GameController extends Application{
         this.serverSocket = null;
         this.clientSocket = null;
         this.socketGame = null;
+        this.input = null;
+        this.output = null;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
-    public void setGridViewBoard(GridAdapter gridViewBoard) { this.gridViewBoard = gridViewBoard; }
-
-    public void dialogRoque(){
-        Activity activity = (Activity) context;
-        FragmentManager fm;
-        RoqueFragment roqueFragment;
-
-        fm = activity.getFragmentManager();
-        roqueFragment = new RoqueFragment();
-
-        RoqueFragment roqueFragment2 = roqueFragment.newInstance(this);
-
-        roqueFragment2.show(fm, "Sample Fragment");
-    }
 
     public void setKingsArray(){
         int i = 0;
@@ -270,6 +250,25 @@ public class GameController extends Application{
                 return piece;
         }
         return null;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public void setGridViewBoard(GridAdapter gridViewBoard) { this.gridViewBoard = gridViewBoard; }
+
+    public void dialogRoque(){
+        Activity activity = (Activity) context;
+        FragmentManager fm;
+        RoqueFragment roqueFragment;
+
+        fm = activity.getFragmentManager();
+        roqueFragment = new RoqueFragment();
+
+        RoqueFragment roqueFragment2 = roqueFragment.newInstance(this);
+
+        roqueFragment2.show(fm, "Sample Fragment");
     }
 
     public Piece getSelectedPiece(){ return this.gameData.getSelectedPiece(); }
@@ -477,13 +476,13 @@ public class GameController extends Application{
     ///////////////////////////////////////// ONLINE /////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 
-    public boolean isWhat() {
-        return what;
-    }
+    public boolean isWhat() { return what; }
 
-    public void setWhat(boolean what) {
-        this.what = what;
-    }
+    public void setWhat(boolean what) { this.what = what; }
+
+    public boolean getOnlineStatus() { return onlineStatus; }
+
+    public void setOnlineStatus(boolean onlineStatus) { this.onlineStatus = onlineStatus; }
 
     public Message getReadClientMessage() { return readClientMessage; }
 
