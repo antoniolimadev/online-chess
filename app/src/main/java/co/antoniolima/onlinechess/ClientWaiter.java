@@ -42,8 +42,11 @@ public class ClientWaiter  implements Runnable {
             while (connected) {
 
                 Message novaJogada = (Message) input.readObject();
-                gameController.selectPosition(novaJogada.getPosition());
-                gameController.updateBoard();
+                if (novaJogada.getPosition() != 1337){
+                    gameController.selectPosition(novaJogada.getPosition());
+                    gameController.updateBoard();
+                }
+                int teste = 0;
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -91,10 +91,10 @@ public class GameController extends Application{
         this.isItMyTurn = false;
     }
 
+
     public String getHandshakeCliente() {
         return handshakeCliente;
     }
-
 
     public void setHandshakeCliente(String handshakeCliente) {
         this.handshakeCliente = handshakeCliente;

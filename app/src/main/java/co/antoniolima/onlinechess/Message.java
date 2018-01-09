@@ -10,7 +10,9 @@ public class Message implements Serializable{
     ArrayList<Piece> boardPieces;
 
     public Message(String text) {
+
         this.text = text;
+        this.position = 1337;
     }
 
     public Message(int position) { this.position = position; }
