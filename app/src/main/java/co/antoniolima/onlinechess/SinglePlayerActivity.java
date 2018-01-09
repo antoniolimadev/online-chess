@@ -31,15 +31,15 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
         if (gameController.isWhat() == SERVER){
             whatAmI.setText("SERVER");
-//            if (gameController.getReadClientMessage() != null){ // le a msg do cliente
-//                whatAmI.setText(gameController.getReadClientMessage().getText());
-//            }
+            if (gameController.getHandshakeCliente() != null){
+                whatAmI.setText(gameController.getHandshakeCliente());
+            }
 
         } else {
             whatAmI.setText("CLIENTE");
-//            if (gameController.getReadServerMessage() != null){  // le a msg do servidor
-//                whatAmI.setText(gameController.getReadServerMessage().getText());
-//            }
+            if (gameController.getHandshakeServer() != null){
+                whatAmI.setText(gameController.getHandshakeServer());
+            }
         }
 
         GridAdapter gridAdapter = new GridAdapter(this, gameController);

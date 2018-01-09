@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
@@ -31,6 +33,7 @@ import static co.antoniolima.onlinechess.Constants.BOT;
 import static co.antoniolima.onlinechess.Constants.DRAWABLE_EMPTY;
 import static co.antoniolima.onlinechess.Constants.HUMAN;
 import static co.antoniolima.onlinechess.Constants.OFFLINE;
+import static co.antoniolima.onlinechess.Constants.ONLINE;
 import static co.antoniolima.onlinechess.Constants.SERVER;
 import static co.antoniolima.onlinechess.Constants.WHITE;
 
@@ -56,6 +59,12 @@ public class GameController extends Application{
     private Message readClientMessage;
     private Message readServerMessage;
 
+    //teste
+    private String handshakeCliente;
+    private String handshakeServer;
+    private boolean isItMyTurn;
+    private boolean myColor;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -78,9 +87,41 @@ public class GameController extends Application{
         this.socketGame = null;
         this.input = null;
         this.output = null;
+        this.procMsg = new Handler();
+        this.isItMyTurn = false;
     }
 
+    public String getHandshakeCliente() {
+        return handshakeCliente;
+    }
 
+    public void setHandshakeCliente(String handshakeCliente) {
+        this.handshakeCliente = handshakeCliente;
+    }
+
+    public String getHandshakeServer() {
+        return handshakeServer;
+    }
+
+    public void setHandshakeServer(String handshakeServer) {
+        this.handshakeServer = handshakeServer;
+    }
+
+    public boolean isItMyTurn() {
+        return this.isItMyTurn;
+    }
+
+    public void setItMyTurn(boolean isItMyTurn) {
+        this.isItMyTurn = isItMyTurn;
+    }
+
+    public boolean getMyColor() {
+        return myColor;
+    }
+
+    public void setMyColor(boolean myColor) {
+        this.myColor = myColor;
+    }
 
     public void setKingsArray(){
         int i = 0;
@@ -90,6 +131,16 @@ public class GameController extends Application{
                 i++;
             }
         }
+    }
+
+    public boolean isMyTurnNow(){
+
+        Player currentPlayer = this.getCurrentPlayer();
+
+        if (currentPlayer.getColor() == this.myColor){
+            return true;
+        }
+        return false;
     }
 
     public void nextTurn(){
@@ -157,21 +208,21 @@ public class GameController extends Application{
     public boolean isRoqueValid(Piece king, Piece rook){
 
         if (!((King) king).hasMadeFirstMove() &&
-            !((Rook) rook).hasMadeFirstMove()){
+                !((Rook) rook).hasMadeFirstMove()){
             this.selectedRook = rook;
             // check if cells between them are empty
             if (rook.getPosition() > king.getPosition()) {  // Torre à direita
 
                 //verifica as 2 posicoes à direita do rei
                 if (!isThisPositionTaken(king.getPosition() + 1) &&
-                    !isThisPositionTaken(king.getPosition() + 2)){
+                        !isThisPositionTaken(king.getPosition() + 2)){
                     return true;
                 }
             } else {                                        // Torre à esquerda
                 //verifica as 3 posicoes à direita do rei
                 if (!isThisPositionTaken(king.getPosition() - 1) &&
-                    !isThisPositionTaken(king.getPosition() - 2) &&
-                    !isThisPositionTaken(king.getPosition() - 3)){
+                        !isThisPositionTaken(king.getPosition() - 2) &&
+                        !isThisPositionTaken(king.getPosition() - 3)){
                     return true;
                 }
             }
@@ -223,7 +274,7 @@ public class GameController extends Application{
     public boolean isThisPositionValid(Position p){
 
         if (p.getX() < 0 || p.getX() >= BOARD_WIDTH
-            || p.getY() < 0 || p.getY() >= BOARD_WIDTH) {
+                || p.getY() < 0 || p.getY() >= BOARD_WIDTH) {
             return false;
         }
         return true;
@@ -273,7 +324,7 @@ public class GameController extends Application{
 
     public Piece getSelectedPiece(){ return this.gameData.getSelectedPiece(); }
 
-    public void selectPosition(int p){
+    public boolean selectPosition(int p){
         // se tou a clicar numa peça
         if(isThisPositionTaken(p)) {
             // peça clicada
@@ -286,12 +337,19 @@ public class GameController extends Application{
                 // se forem de cores diferentes, tenta capturar (pode nao ser uma jogada valida)
                 if (selectedPiece.getColor() != clickedPiece.getColor()){
                     selectedPiece.capture(this, clickedPiece); // JOGADA TERMINADA
+                    if (this.onlineStatus == ONLINE){
+                        if(isMyTurnNow() != true) { // porque o capture ja muda o turno
+                            this.enviaNovaPosicao(p);
+                            this.updateImages();
+                            return false;
+                        }
+                    }
                 }
                 // se forem da mesma cor
                 else {
                     // check Roque
                     if (selectedPiece instanceof King &&
-                        clickedPiece instanceof Rook){
+                            clickedPiece instanceof Rook){
 
                         if (this.isRoqueValid(selectedPiece, clickedPiece)){
                             this.dialogRoque();
@@ -305,14 +363,28 @@ public class GameController extends Application{
                         // seleciona a nova peça
                         this.gameData.setSelectedPiece(getPieceByPosition(p));
                         this.getSelectedPiece().select(this);
+                        if (this.onlineStatus == ONLINE){
+                            if(isMyTurnNow() == true) {
+                                this.enviaNovaPosicao(p);
+                                this.updateImages();
+                                return true;
+                            }
+                        }
                     }
                 }
-            // e nao ta nenhuma selecionada previamente
+                // e nao ta nenhuma selecionada previamente
             }else {
                 // compara a cor para verificar se pode seleciona-la
                 if (clickedPiece.getColor() == this.getCurrentPlayer().getColor()){
                     this.gameData.setSelectedPiece(getPieceByPosition(p));
                     this.getSelectedPiece().select(this);
+                    if (this.onlineStatus == ONLINE){
+                        if(isMyTurnNow() == true) {
+                            this.enviaNovaPosicao(p);
+                            this.updateImages();
+                            return true;
+                        }
+                    }
                 }
             }
         }else{
@@ -320,9 +392,17 @@ public class GameController extends Application{
             // move essa peça para essa casa
             if(this.gameData.getSelectedPiece() != null){
                 this.getSelectedPiece().move(this, p); // JOGADA TERMINADA
+                if (this.onlineStatus == ONLINE){
+                    if(isMyTurnNow() != true) { // porque o move ja muda o turno
+                        this.enviaNovaPosicao(p);
+                        this.updateImages();
+                        return false;
+                    }
+                }
             }
         }
         this.updateImages();
+        return false;
     }
 
     public int[] getImages() {
@@ -476,6 +556,39 @@ public class GameController extends Application{
     ///////////////////////////////////////// ONLINE /////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////
 
+    public void enviaNovaPosicao(final int p){
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    output.writeObject(new Message(p));
+                    output.flush();
+                } catch (Exception e) {
+                    Log.d("RPS", "Error sending a move");
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void enviaConfirmacao(final int p){
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Message confirm = new Message("Confirmado: " + p);
+                    output.writeObject(confirm);
+                    output.flush();
+                } catch (Exception e) {
+                    Log.d("RPS", "Error sending a move");
+                }
+            }
+        });
+        t.start();
+    }
+
     public boolean isWhat() { return what; }
 
     public void setWhat(boolean what) { this.what = what; }
@@ -494,6 +607,8 @@ public class GameController extends Application{
 
     public void runServer() {
 
+        final GameController gameController = this;
+
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -501,34 +616,33 @@ public class GameController extends Application{
                     serverSocket = new ServerSocket(8899);
                     socketGame = serverSocket.accept();
 
+                    serverSocket.close();
+                    serverSocket = null;
                     commThreadServer.start();
-//                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(intent);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     socketGame = null;
                 }
-//                procMsg.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                        if (socketGame == null) {
-//
-//                            procMsg.post(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                    startActivity(intent);
-//                                }
-//                            });
-//                            return;
-//                        }
-//                    }
-//                });
+                procMsg.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (socketGame == null) {
+
+                            procMsg.post(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            });
+                            return;
+                        }
+                    }
+                });
             }
         });
         t.start();
@@ -542,55 +656,51 @@ public class GameController extends Application{
                 output = new ObjectOutputStream(socketGame.getOutputStream());
 
                 //recebe info do cliente
-                readClientMessage = (Message) input.readObject();
-
-                output.writeObject(new Message("Ola do Servidor"));
-                output.flush();
-
-                Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                Message respostaCliente = (Message) input.readObject();
+                handshakeCliente = respostaCliente.getText();
 
                 //envia info para cliente
-//                Message resposta = new Message("Recebi " + readClient.getText());
-//                output.writeObject(resposta);
+                output.writeObject(new Message("Handshake do Server"));
                 output.flush();
 
-//                try {
-//                    procMsg.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //AQUI QUE INICIO O TABULEIRO
-//                            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
-//                        }
-//                    });
-//                } catch (Exception e2) {
-//                    procMsg.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Toast.makeText(getApplicationContext(), "Fim do Jogo", Toast.LENGTH_LONG).show();
-//                        }
-//                    });
-//                }
+                try {
+                    procMsg.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //AQUI QUE INICIO O TABULEIRO
+                            Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+                } catch (Exception e2) {
+                    procMsg.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Fim do Jogo", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
 
 
-//                while (!Thread.currentThread().isInterrupted()) {
-//                    final GameInformation readClientMoves = (GameInformation) input.readObject();
-//                    setChanges(readClientMoves);
-//
-//                    procMsg.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //TODO: logica
-//
-//
-//
-//                            MultiplayerOnlineBoardActivity.updateBoard();
-//                        }
-//                    });
-//                }
+                while (!Thread.currentThread().isInterrupted()) {
+                    Message respostaServidor = (Message) input.readObject();
+                    if (respostaServidor.getPosition() == 1337){
+                        handshakeServer = respostaServidor.getText();
+                    } else{
+                        if(selectPosition(respostaServidor.getPosition())){ // true - enviou posicao ao cliente
+                            enviaConfirmacao(respostaServidor.getPosition());
+                        }
+                     }
+
+                    procMsg.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            updateBoard();
+                        }
+                    });
+                }
             } catch (final Exception e) {
                 procMsg.post(new Runnable() {
                     @Override
@@ -610,28 +720,27 @@ public class GameController extends Application{
                 try {
                     Log.d("RPS", "Connecting to the server  " + strIP);
                     socketGame = new Socket(strIP, Port);
+
                 } catch (Exception e) {
                     socketGame = null;
                 }
                 if (socketGame == null) {
-//                    procMsg.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                            Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
-//                        }
-//                    });
-//                    return;
+                    procMsg.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+                    return;
                 }
                 commThreadClient.start();
             }
         });
         t.start();
     }
-
-
 
     Thread commThreadClient = new Thread(new Runnable() {
 
@@ -642,47 +751,47 @@ public class GameController extends Application{
                 input = new ObjectInputStream(socketGame.getInputStream());
 
                 //Envia a info do cliente
-                output.writeObject(new Message("Ola do Cliente"));
+                output.writeObject(new Message("Handshake do Cliente"));
                 output.flush();
-                //recebe info do servidor
-                readServerMessage = (Message) input.readObject();
 
-                Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                try {
+                    procMsg.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+                } catch (Exception e2) {
+                    procMsg.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Fim do Jogo", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
 
-//                try {
-//                    procMsg.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent intent = new Intent(getApplicationContext(), SinglePlayerActivity.class);
-//                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            startActivity(intent);
-//                        }
-//                    });
-//                } catch (Exception e2) {
-//                    procMsg.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Toast.makeText(getApplicationContext(), "Fim do Jogo", Toast.LENGTH_LONG).show();
-//                        }
-//                    });
-//                }
+                while (!Thread.currentThread().isInterrupted()) {
 
+                    Message respostaServidor = (Message) input.readObject();
+                    if (respostaServidor.getPosition() == 1337){
+                        handshakeServer = respostaServidor.getText();
+                    } else{
+                        if (!selectPosition(respostaServidor.getPosition())){
+                            enviaConfirmacao(respostaServidor.getPosition());
+                        }
+                        //updateBoard();
+                    }
 
-//                while (!Thread.currentThread().isInterrupted()) {
-//                    final GameInformation readServerMoves = (GameInformation) input.readObject();
-//                    setChanges(readServerMoves);
-//
-//                    procMsg.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //TODO:logica
-//
-//                            MultiplayerOnlineBoardActivity.updateBoard();
-//                        }
-//                    });
-//                }
+                    procMsg.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            updateBoard();
+                        }
+                    });
+                }
             } catch (final Exception e) {
                 procMsg.post(new Runnable() {
                     @Override
@@ -691,6 +800,7 @@ public class GameController extends Application{
                         Log.e("MYAPP", "exception", e);
                     }
                 });
+
             }
         }
     });
