@@ -11,17 +11,17 @@ import android.view.ViewGroup;
  * Created by a21200305 on 2018-01-07.
  */
 
-public class CreditsFragment extends Fragment {
+public class AccountFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.credits_fragment, container,false);
+        return inflater.inflate(R.layout.profile_fragment, container,false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle(R.string.credits);
+        getActivity().setTitle(R.string.account);
     }
 }

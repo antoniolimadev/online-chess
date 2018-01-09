@@ -83,6 +83,11 @@ public class GameController extends Application{
         this.socketGame = null;
     }
 
+
+    public void setOnlineStatus(boolean onlineStatus) {
+        this.onlineStatus = onlineStatus;
+    }
+
     public void setContext(Context context) {
         this.context = context;
     }

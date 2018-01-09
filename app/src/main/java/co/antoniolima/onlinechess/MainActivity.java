@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_language:
                 languageDialog();
                 break;
+            case R.id.nav_account:
+                fragment = new AccountFragment();
+                break;
         }
 
         if(fragment != null){

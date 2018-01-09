@@ -12,7 +12,13 @@
 
     <string name="play">Jogar</string>
     <string name="credits">Créditos</string>
-    <string name="credits_text">Isto são os créditos</string>
+    <string name="credits_text">
+        Arquitecturas Móveis \n\n
+        ISEC 2017/2018 \n\n
+        a21200305 Jorge Teixeira \n
+        a21190307 António Lima
+
+    </string>
     <string name="help">Ajuda</string>
     <string name="help_text">Isto é a ajuda</string>
     <string name="stats">Estatisticas</string>
@@ -21,6 +27,10 @@
     <string name="single_player">Só um jogador</string>
     <string name="name">Nome</string>
     <string name="multi_player_local">Multiplayer (Local)</string>
+    <string name="create_game">Criar Jogo</string>
+    <string name="join_game">Entrar num jogo</string>
+    <string name="account">Perfil</string>\
+    <string name="account_text">Perfil de utilizador</string>
 
     <string name="action_settings">Configuração</string>
     <string name="spinner_title">Linguagem</string>
