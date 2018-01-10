@@ -1,5 +1,7 @@
 package co.antoniolima.onlinechess;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -9,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 
 import static co.antoniolima.onlinechess.Constants.BLACK;
 import static co.antoniolima.onlinechess.Constants.CLIENT;
@@ -26,6 +27,10 @@ public class PlayFragment extends Fragment {
     Button buttonLocalMultiplayer;
     Button buttonCreateOnlineGame;
     Button buttonJoinOnlineGame;
+
+    Activity activity;
+    FragmentManager fm;
+    DiscardGameFragment discardGameFragment;
 
     @Nullable
     @Override
@@ -44,50 +49,85 @@ public class PlayFragment extends Fragment {
         buttonCreateOnlineGame = getActivity().findViewById(R.id.btnCreateGame);
         buttonJoinOnlineGame = getActivity().findViewById(R.id.btnJoinGame);
 
+        activity = (Activity) view.getContext();
+
+        fm = activity.getFragmentManager();
+        discardGameFragment = new DiscardGameFragment();
+
+        final DiscardGameFragment discardGameFragment2 = discardGameFragment.newInstance(gameController);
+
         buttonSingleplayer.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
-                //String texto = textBox.getText().toString();
-                gameController.newSinglePlayerGame();
-
-                Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
-                startActivity(intent);
+                // se ja esta um jogo a decorrer
+                if (gameController.isGameRunning()){
+                    discardGameFragment2.show(fm, "Discard Game Fragment");
+                } else{
+                    gameController.resetGameData();
+                    gameController.initGameController();
+                    gameController.newSinglePlayerGame();
+                    gameController.setLocalMultiplayerGame(false);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         buttonLocalMultiplayer.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
-                gameController.newLocalMultiPlayerGame();
-
-                Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
-                startActivity(intent);
+                // se ja esta um jogo a decorrer
+                if (gameController.isGameRunning()){
+                    discardGameFragment2.show(fm, "Discard Game Fragment");
+                } else{
+                    gameController.resetGameData();
+                    gameController.initGameController();
+                    gameController.newLocalMultiPlayerGame();
+                    gameController.setLocalMultiplayerGame(true);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         buttonCreateOnlineGame.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
-                gameController.setWhat(SERVER);
-                gameController.newLocalMultiPlayerGame();
-                gameController.setOnlineStatus(ONLINE);
-                gameController.setItMyTurn(true);
-                gameController.setMyColor(WHITE);
-                Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
-                startActivity(intent);
+                // se ja esta um jogo a decorrer
+                if (gameController.isGameRunning()){
+                    discardGameFragment2.show(fm, "Discard Game Fragment");
+                } else {
+                    gameController.resetGameData();
+                    gameController.initGameController();
+                    gameController.setWhat(SERVER);
+                    gameController.newLocalMultiPlayerGame();
+                    gameController.setOnlineStatus(ONLINE);
+                    gameController.setItMyTurn(true);
+                    gameController.setMyColor(WHITE);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         buttonJoinOnlineGame.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
-                gameController.setWhat(CLIENT);
-                gameController.newLocalMultiPlayerGame();
-                gameController.setOnlineStatus(ONLINE);
-                gameController.setItMyTurn(false);
-                gameController.setMyColor(BLACK);
-                Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
-                startActivity(intent);
+                // se ja esta um jogo a decorrer
+                if (gameController.isGameRunning()){
+                    discardGameFragment2.show(fm, "Discard Game Fragment");
+                } else {
+
+                    gameController.resetGameData();
+                    gameController.initGameController();
+                    gameController.setWhat(CLIENT);
+                    gameController.newLocalMultiPlayerGame();
+                    gameController.setOnlineStatus(ONLINE);
+                    gameController.setItMyTurn(false);
+                    gameController.setMyColor(BLACK);
+                    Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

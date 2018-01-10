@@ -46,6 +46,8 @@ public class GameController extends Application{
     private Context context;
     private GridAdapter gridViewBoard;
     private Piece selectedRook;      // ponteiro para a Torre usada no roque
+    private boolean localMultiplayerGame;
+    private boolean gameRunning;
     // ONLINE
     private boolean what;
     private boolean onlineStatus;
@@ -69,6 +71,10 @@ public class GameController extends Application{
     public void onCreate() {
         super.onCreate();
         this.gameData = new GameData();
+        this.initGameController();
+    }
+
+    public void initGameController(){
         this.images = new int[BOARD_SIZE];
         this.highlighted = new boolean[BOARD_SIZE];
         this.updateImages();
@@ -76,6 +82,9 @@ public class GameController extends Application{
         this.kingsArray = new King[2];
         this.setKingsArray();
         this.selectedRook = null;
+        this.localMultiplayerGame = false;
+        this.myColor = WHITE;
+        this.gameRunning = false;
         // ONLINE
         this.onlineStatus = OFFLINE;
         this.what = SERVER;
@@ -89,6 +98,28 @@ public class GameController extends Application{
         this.output = null;
         this.procMsg = new Handler();
         this.isItMyTurn = false;
+        this.handshakeCliente = "";
+        this.handshakeServer = "";
+    }
+
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
+    public void setGameRunning(boolean gameRunning) {
+        this.gameRunning = gameRunning;
+    }
+
+    public void resetGameData(){
+        this.gameData.resetGameData();
+    }
+
+    public boolean isLocalMultiplayerGame() {
+        return localMultiplayerGame;
+    }
+
+    public void setLocalMultiplayerGame(boolean localMultiplayerGame) {
+        this.localMultiplayerGame = localMultiplayerGame;
     }
 
     public String getHandshakeCliente() {
@@ -403,6 +434,7 @@ public class GameController extends Application{
             }
         }
         this.updateImages();
+        this.setGameRunning(true);
         return false;
     }
 

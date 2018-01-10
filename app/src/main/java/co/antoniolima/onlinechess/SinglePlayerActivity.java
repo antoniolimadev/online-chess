@@ -1,5 +1,6 @@
 package co.antoniolima.onlinechess;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.GridView;
@@ -45,5 +46,12 @@ public class SinglePlayerActivity extends AppCompatActivity {
         GridAdapter gridAdapter = new GridAdapter(this, gameController);
         gridViewBoard.setAdapter(gridAdapter);
         gameController.setGridViewBoard(gridAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 }

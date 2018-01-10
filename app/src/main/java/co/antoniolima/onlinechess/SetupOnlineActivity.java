@@ -78,8 +78,8 @@ public class SetupOnlineActivity extends AppCompatActivity {
         final Context context = this;
         final EditText edtIP = new EditText(this);
 
-        //edtIP.setText("192.168.1.143");
-        edtIP.setText("192.168.1.149");
+        edtIP.setText("192.168.1.143");
+        //edtIP.setText("192.168.1.149");
 
         AlertDialog ad = new AlertDialog.Builder(context).setTitle("CHESSS (CLIENTE)")
                 .setMessage("Server IP").setView(edtIP)

@@ -25,6 +25,16 @@ public class GameData {
         this.setKingsArray();
     }
 
+    public void resetGameData(){
+        this.boardPieces = new ArrayList<>();
+        this.selectedPiece = null;
+        this.players = new ArrayList<>();
+        this.turn = 0;
+        this.initGameData();
+        this.kingsArray = new King[2];
+        this.setKingsArray();
+    }
+
     public ArrayList<Player> getPlayers() { return players; }
 
     public void setPlayers(ArrayList<Player> players) { this.players = players; }
