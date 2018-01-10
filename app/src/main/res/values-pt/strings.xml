@@ -32,6 +32,16 @@
     <string name="timer">Relógio</string>
     <string name="account">Perfil</string>\
     <string name="account_text">Perfil de utilizador</string>
+    <string name="foto_button">Tirar Foto</string>
+    <string name="save_button">Guardar</string>
+    <string name="hint_name">Nome</string>
+    <string name="hint_email">Email</string>
+    <string name="profile_email">Email: </string>
+    <string name="profile_birthday">Data Nascimento: </string>
+
+    <string name="statswin">Numero de Vitórias</string>
+    <string name="statsloss">Numer de Derrotas</string>
+
 
     <string name="action_settings">Configuração</string>
     <string name="spinner_title">Linguagem</string>

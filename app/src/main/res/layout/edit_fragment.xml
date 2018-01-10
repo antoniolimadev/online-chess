@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/banner"
+
+    >
 
 
     <ScrollView
@@ -33,30 +36,36 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:onClick="takeFotoFunc"
-                android:text="Button" />
+                android:text="@string/foto_button" />
 
             <EditText
                 android:id="@+id/editName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_margin="20dp"
+                android:background="#cccccc"
+                android:alpha="0.7"
                 android:ems="10"
-                android:hint="Name"
+                android:hint="@string/hint_name"
                 android:inputType="textMultiLine" />
 
             <EditText
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_margin="20dp"
+                android:background="#cccccc"
+                android:alpha="0.7"
                 android:ems="10"
-                android:hint="Email"
+                android:hint="@string/hint_email"
                 android:inputType="textEmailAddress" />
 
             <co.antoniolima.onlinechess.CustomDatePicker
                 android:id="@+id/datePicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#cccccc"
+                android:alpha="0.7"
                 android:layout_margin="20dp" />
 
             <Button
@@ -65,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:onClick="saveDataFunc"
-                android:text="Save" />
+                android:text="@string/save_button" />
 
         </LinearLayout>
 

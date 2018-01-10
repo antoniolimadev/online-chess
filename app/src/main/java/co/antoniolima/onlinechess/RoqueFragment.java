@@ -47,15 +47,6 @@ public class RoqueFragment extends DialogFragment {
     }
 
 
-//    public static RoqueFragment newInstance(int arg, GameController gameController) {
-//        RoqueFragment frag = new RoqueFragment();
-//        Bundle args = new Bundle();
-//        args.putInt("count", arg);
-//        frag.setArguments(args);
-//        frag.setComplexVariable(gameController);
-//        return frag;
-//    }
-
     public static RoqueFragment newInstance(GameController gameController) {
         RoqueFragment frag = new RoqueFragment();
         frag.setComplexVariable(gameController);

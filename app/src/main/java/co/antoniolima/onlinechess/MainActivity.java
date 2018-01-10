@@ -71,12 +71,6 @@ public class MainActivity extends AppCompatActivity
         userEmail = new String(" ");
         userDate = new String(" ");
 
-//        sharedPreferences = getSharedPreferences(userName, MODE_PRIVATE);
-//        String restoredName = sharedPreferences.getString("text", null);
-//        if (restoredName != null) {
-//            String name = sharedPreferences.getString("name", "No name defined");//"No name defined" is the default value.
-//        }
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         userName = prefs.getString("MYNAME", "NothingFound");
         userEmail = prefs.getString("MYEMAIL", "NothingFound");
@@ -192,9 +186,6 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_account:
                 fragment = new AccountFragment();
-                break;
-            case R.id.nav_timer:
-                fragment = new TimerFragment();
                 break;
         }
 

@@ -113,12 +113,6 @@ public abstract class Piece {
         return false;
     }
 
-    //    public int[] getTargetPositionsArray() { return targetPositions; }
-//
-//    public int getTargetPosition(int p) { return targetPositions[p]; }
-//
-//    public void setTargetPositionArray(int[] targetPositions) { this.targetPositions = targetPositions; }
-
     public boolean getAvailablePosition(int p) { return availablePositions[p]; }
 
     public void setAvailablePosition(int p) { this.availablePositions[p] = true; }

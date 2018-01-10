@@ -7,10 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by a21200305 on 2018-01-07.
- */
-
 public class CreditsFragment extends Fragment {
 
     @Nullable

@@ -21,7 +21,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle(R.string.credits);
+        getActivity().setTitle(R.string.account);
         ImageView imageview = (ImageView) view.findViewById(R.id.edit);
         imageview.setOnClickListener(this);
 

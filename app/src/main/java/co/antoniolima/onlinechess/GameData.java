@@ -63,15 +63,6 @@ public class GameData {
 
     }
 
-    //    public void sfdfetKingsArray() {
-//        //procura as piece king e coloca no array
-//        for (Piece piece : this.getBoardPieces()){
-//            if(piece instanceof King){
-//                kingsArray.add((King)piece);
-
-//            }
-//        }
-//    }
 
     public Piece getSelectedPiece(){ return selectedPiece; }
 

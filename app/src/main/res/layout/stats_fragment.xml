@@ -5,14 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/banner"
+
     >
 
     <TextView
         android:id="@+id/numOfWins"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/stats_text"
+        android:layout_width="match_parent"
+        android:layout_height="93dp"
         android:layout_margin="20dp"
+        android:text="@string/statswin"
+        android:textColor="#ffffff"
+        android:textSize="32sp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -20,10 +25,13 @@
 
     <TextView
         android:id="@+id/numOfLosses"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/stats_text"
+        android:layout_width="match_parent"
+        android:layout_height="93dp"
         android:layout_margin="20dp"
+        android:textColor="#ffffff"
+        android:textSize="32sp"
+        android:text="@string/statsloss"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

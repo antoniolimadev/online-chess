@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/banner"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,8 +21,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerCrop"
 
-            android:src="@drawable/side_nav_bar"
-            app:srcCompat="@drawable/side_nav_bar" />
+ />
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -45,7 +46,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/header_cover_image"
-            android:background="@drawable/side_nav_bar"
             android:elevation="4dp"
             android:paddingBottom="24dp">
 
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="70dp"
-                android:text="Jorge"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -83,14 +83,12 @@
             android:layout_below="@+id/profile_layout"
             android:layout_margin="5dp"
             android:layout_marginTop="5dp"
-            android:background="#fff"
             android:elevation="4dp"
             android:orientation="vertical"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
-
             >
 
             <TextView
@@ -99,8 +97,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:clickable="true"
-                android:text="Email: "
+                android:text="@string/profile_email"
                 android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:textSize="32sp"
+
                 android:layout_marginLeft="25dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="8dp"
@@ -115,7 +116,10 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:clickable="true"
-                android:text="Birthday: "
+                android:textColor="#ffffff"
+                android:textSize="32sp"
+
+                android:text="@string/profile_birthday"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

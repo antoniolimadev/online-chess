@@ -59,7 +59,7 @@ public class SetupOnlineActivity extends AppCompatActivity {
         String ip = gameController.getLocalIpAddress();
         pd = new ProgressDialog(this);
         pd.setMessage("Waiting for a client..." + "\n(IP: " + ip + ")");
-        pd.setTitle("CHESSS (SERVER)");
+        pd.setTitle("Player 1");
 
         //setOnCancel é chamado sempre que é feito um back, ou o um toque fora da dialog box
         pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -81,7 +81,7 @@ public class SetupOnlineActivity extends AppCompatActivity {
         edtIP.setText("192.168.1.143");
         //edtIP.setText("192.168.1.149");
 
-        AlertDialog ad = new AlertDialog.Builder(context).setTitle("CHESSS (CLIENTE)")
+        AlertDialog ad = new AlertDialog.Builder(context).setTitle("Player 2")
                 .setMessage("Server IP").setView(edtIP)
                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override

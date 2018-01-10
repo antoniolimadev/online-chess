@@ -18,13 +18,6 @@ public class Pawn extends Piece {
         this.hasMadeFirstMove = false;
     }
 
-//    @Override
-//    public void findAvailablePositions(GameController gameController){
-//        this.resetAvailablePositions();
-//
-//        // TODO: check if there are pieces in the way and Pawn direction
-//    }
-
     @Override
     public void initTargetPositions(GameController gameController){
         this.resetTargetPositions();
