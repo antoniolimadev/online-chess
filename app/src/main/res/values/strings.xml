@@ -22,11 +22,14 @@
     <string name="help_text">This is the help</string>
     <string name="stats">Stats</string>
     <string name="stats_text">This are the stats</string>
+    <string name="edit">Edit</string>
+    <string name="edit_text">This is the Edit</string>
     <string name="language">Language</string>
     <string name="single_player">Single Player</string>
     <string name="create_game">Create Game</string>
     <string name="join_game">Join Game</string>
     <string name="name">Name</string>
+    <string name="timer">Timer</string>
     <string name="multi_player_local">Multiplayer (Local)</string>
     <string name="account">Account</string>\
     <string name="account_text">This is user account</string>

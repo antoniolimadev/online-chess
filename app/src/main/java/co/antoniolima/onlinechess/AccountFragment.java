@@ -3,15 +3,14 @@ package co.antoniolima.onlinechess;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-/**
- * Created by a21200305 on 2018-01-07.
- */
-
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements View.OnClickListener {
 
     @Nullable
     @Override
@@ -22,6 +21,35 @@ public class AccountFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getActivity().setTitle(R.string.account);
+        getActivity().setTitle(R.string.credits);
+        ImageView imageview = (ImageView) view.findViewById(R.id.edit);
+        imageview.setOnClickListener(this);
+
+        TextView nametv = (TextView) view.findViewById(R.id.name);
+        nametv.setText(((MainActivity)getActivity()).getUserName());
+
+        TextView  emailtv = (TextView) view.findViewById(R.id.email);
+        emailtv.setText("Email: " + ((MainActivity)getActivity()).getUserEmail());
+
+        TextView birthdaytv = (TextView) view.findViewById(R.id.birthday);
+        birthdaytv.setText("Birthday: " + ((MainActivity)getActivity()).getUserDate());
+
     }
+
+    public void onClick(View view){
+        editFunc();
+    }
+
+    public void editFunc(){
+        Fragment fragment = null;
+        fragment = new EditFragment();
+
+        if(fragment != null){
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_main,fragment);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
+    }
+
 }

@@ -6,12 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-/**
- * Created by a21200305 on 2018-01-07.
- */
+import android.widget.TextView;
 
 public class StatsFragment extends Fragment {
+
+    TextView numOfWins, numOfLosses;
 
     @Nullable
     @Override
@@ -23,5 +22,12 @@ public class StatsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(R.string.stats);
+
+        numOfWins = (TextView) getView().findViewById(R.id.numOfWins);
+        int i = ((MainActivity)getActivity()).getNumOfWins();
+        numOfWins.setText("WIN: " + Integer.toString(i));
+        numOfLosses = (TextView) getView().findViewById(R.id.numOfLosses);
+        int j = ((MainActivity)getActivity()).getNumOfLosses();
+        numOfLosses.setText("LOST: " +  Integer.toString(j));
     }
 }

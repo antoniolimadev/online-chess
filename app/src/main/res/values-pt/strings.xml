@@ -29,6 +29,7 @@
     <string name="multi_player_local">Multiplayer (Local)</string>
     <string name="create_game">Criar Jogo</string>
     <string name="join_game">Entrar num jogo</string>
+    <string name="timer">Relógio</string>
     <string name="account">Perfil</string>\
     <string name="account_text">Perfil de utilizador</string>
 

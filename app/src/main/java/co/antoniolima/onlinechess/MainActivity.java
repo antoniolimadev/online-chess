@@ -1,7 +1,10 @@
 package co.antoniolima.onlinechess;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -35,6 +38,14 @@ import android.util.DisplayMetrics;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    String userName;
+    String userEmail;
+    String userDate;
+    int numOfWins;
+    int numOfLosses;
+
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +62,81 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         displaySelectedScreen(R.id.nav_play);
+
+        userName = new String(" ");
+        userEmail = new String(" ");
+        userDate = new String(" ");
+
+//        sharedPreferences = getSharedPreferences(userName, MODE_PRIVATE);
+//        String restoredName = sharedPreferences.getString("text", null);
+//        if (restoredName != null) {
+//            String name = sharedPreferences.getString("name", "No name defined");//"No name defined" is the default value.
+//        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        userName = prefs.getString("MYNAME", "NothingFound");
+        userEmail = prefs.getString("MYEMAIL", "NothingFound");
+        userDate = prefs.getString("MYDATE", "NothingFound");
+        numOfWins = prefs.getInt("MYINTWIN", 3);
+        numOfLosses = prefs.getInt("MYINTLOSS", 90);
+
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+
+        SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit();
+        prefEditor.putString("MYNAME", userName);
+        prefEditor.putString("MYEMAIL", userEmail);
+        prefEditor.putString("MYDATE", userDate);
+        prefEditor.putInt("MYINTWIN", numOfWins);
+        prefEditor.putInt("MYINTLOSS", numOfLosses);
+        prefEditor.apply();
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserDate() {
+        return userDate;
+    }
+
+    public void setUserDate(String userDate) {
+        this.userDate = userDate;
+    }
+
+    public int getNumOfWins() {
+        return numOfWins;
+    }
+
+    public void setNumOfWins(int numOfWins) {
+        this.numOfWins = numOfWins;
+    }
+
+    public int getNumOfLosses() {
+        return numOfLosses;
+    }
+
+    public void setNumOfLosses(int numOfLosses) {
+        this.numOfLosses = numOfLosses;
     }
 
     @Override
@@ -107,6 +192,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_account:
                 fragment = new AccountFragment();
+                break;
+            case R.id.nav_timer:
+                fragment = new TimerFragment();
                 break;
         }
 
@@ -169,4 +257,5 @@ public class MainActivity extends AppCompatActivity
         startActivity(refresh);
         finish();
     }
+
 }
