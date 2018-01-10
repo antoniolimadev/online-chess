@@ -47,7 +47,8 @@ public class PlayFragment extends Fragment {
         buttonSingleplayer.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
-                //String texto = textBox.getText().toString();
+                gameController.resetGameData();
+                gameController.initGameController();
                 gameController.newSinglePlayerGame();
                 gameController.setLocalMultiplayerGame(false);
                 Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
@@ -58,6 +59,8 @@ public class PlayFragment extends Fragment {
         buttonLocalMultiplayer.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
+                gameController.resetGameData();
+                gameController.initGameController();
                 gameController.newLocalMultiPlayerGame();
                 gameController.setLocalMultiplayerGame(true);
                 Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
@@ -68,6 +71,8 @@ public class PlayFragment extends Fragment {
         buttonCreateOnlineGame.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
+                gameController.resetGameData();
+                gameController.initGameController();
                 gameController.setWhat(SERVER);
                 gameController.newLocalMultiPlayerGame();
                 gameController.setOnlineStatus(ONLINE);
@@ -81,6 +86,8 @@ public class PlayFragment extends Fragment {
         buttonJoinOnlineGame.setOnClickListener( new View.OnClickListener() {
             public void onClick(View v) {
 
+                gameController.resetGameData();
+                gameController.initGameController();
                 gameController.setWhat(CLIENT);
                 gameController.newLocalMultiPlayerGame();
                 gameController.setOnlineStatus(ONLINE);

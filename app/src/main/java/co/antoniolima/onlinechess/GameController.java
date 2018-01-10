@@ -70,6 +70,10 @@ public class GameController extends Application{
     public void onCreate() {
         super.onCreate();
         this.gameData = new GameData();
+        this.initGameController();
+    }
+
+    public void initGameController(){
         this.images = new int[BOARD_SIZE];
         this.highlighted = new boolean[BOARD_SIZE];
         this.updateImages();
@@ -78,6 +82,7 @@ public class GameController extends Application{
         this.setKingsArray();
         this.selectedRook = null;
         this.localMultiplayerGame = false;
+        this.myColor = WHITE;
         // ONLINE
         this.onlineStatus = OFFLINE;
         this.what = SERVER;
@@ -91,6 +96,12 @@ public class GameController extends Application{
         this.output = null;
         this.procMsg = new Handler();
         this.isItMyTurn = false;
+        this.handshakeCliente = "";
+        this.handshakeServer = "";
+    }
+
+    public void resetGameData(){
+        this.gameData.resetGameData();
     }
 
     public boolean isLocalMultiplayerGame() {
