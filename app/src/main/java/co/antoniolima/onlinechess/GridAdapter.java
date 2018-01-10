@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import static co.antoniolima.onlinechess.Constants.BLACK;
 import static co.antoniolima.onlinechess.Constants.BOARD_WIDTH;
 import static co.antoniolima.onlinechess.Constants.BLACK_B;
 import static co.antoniolima.onlinechess.Constants.BLACK_G;
@@ -58,6 +59,14 @@ public class GridAdapter extends BaseAdapter {
             layers[1] = r.getDrawable(DRAWABLE_SELECTED_RED);               // borda amarela
             LayerDrawable layerDrawable = new LayerDrawable(layers);
             imageView.setImageDrawable(layerDrawable);
+        }
+        if (gameController.getMyColor() == BLACK){
+            imageView.setRotation(180);
+        }
+        if (gameController.isThisPositionTaken(i)){
+            if (gameController.isLocalMultiplayerGame() && gameController.getPieceByPosition(i).getColor() == BLACK){
+                imageView.setRotation(180);
+            }
         }
         imageView.setAdjustViewBounds(true);
 //      y = ind/cols

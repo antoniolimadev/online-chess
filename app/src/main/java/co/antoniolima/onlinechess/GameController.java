@@ -46,6 +46,7 @@ public class GameController extends Application{
     private Context context;
     private GridAdapter gridViewBoard;
     private Piece selectedRook;      // ponteiro para a Torre usada no roque
+    private boolean localMultiplayerGame;
     // ONLINE
     private boolean what;
     private boolean onlineStatus;
@@ -76,6 +77,7 @@ public class GameController extends Application{
         this.kingsArray = new King[2];
         this.setKingsArray();
         this.selectedRook = null;
+        this.localMultiplayerGame = false;
         // ONLINE
         this.onlineStatus = OFFLINE;
         this.what = SERVER;
@@ -89,6 +91,14 @@ public class GameController extends Application{
         this.output = null;
         this.procMsg = new Handler();
         this.isItMyTurn = false;
+    }
+
+    public boolean isLocalMultiplayerGame() {
+        return localMultiplayerGame;
+    }
+
+    public void setLocalMultiplayerGame(boolean localMultiplayerGame) {
+        this.localMultiplayerGame = localMultiplayerGame;
     }
 
     public String getHandshakeCliente() {

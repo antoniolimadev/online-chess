@@ -49,7 +49,7 @@ public class PlayFragment extends Fragment {
 
                 //String texto = textBox.getText().toString();
                 gameController.newSinglePlayerGame();
-
+                gameController.setLocalMultiplayerGame(false);
                 Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
                 startActivity(intent);
             }
@@ -59,7 +59,7 @@ public class PlayFragment extends Fragment {
             public void onClick(View v) {
 
                 gameController.newLocalMultiPlayerGame();
-
+                gameController.setLocalMultiplayerGame(true);
                 Intent intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
                 startActivity(intent);
             }
