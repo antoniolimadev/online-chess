@@ -1,108 +1,125 @@
 package co.antoniolima.onlinechess;
 
-import android.content.Context;
-import android.net.Uri;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+
+import static co.antoniolima.onlinechess.Constants.BLACK;
+import static co.antoniolima.onlinechess.Constants.CLIENT;
+import static co.antoniolima.onlinechess.Constants.ONLINE;
+import static co.antoniolima.onlinechess.Constants.SERVER;
+import static co.antoniolima.onlinechess.Constants.WHITE;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link discardGameFragment.OnFragmentInteractionListener} interface
+ * {@link RoqueFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link discardGameFragment#newInstance} factory method to
+ * Use the {@link RoqueFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class discardGameFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class DiscardGameFragment extends DialogFragment {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    GameController gameController;
+    View view;
+    Intent intent;
+    //Button bt = view.findbyid(...)
 
-    private OnFragmentInteractionListener mListener;
-
-    public discardGameFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment discardGameFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static discardGameFragment newInstance(String param1, String param2) {
-        discardGameFragment fragment = new discardGameFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    //@NonNull
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        setRetainInstance(true);
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        view = inflater.inflate(R.layout.fragment_discard_game, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setView(view).setNeutralButton("Continuar Jogo", dialogClickListener);
+        builder.setView(view).setNegativeButton("Novo Jogo", dialogClickListener);
+        return builder.create();
+    }
+
+    public static DiscardGameFragment newInstance(GameController gameController) {
+        DiscardGameFragment frag = new DiscardGameFragment();
+        frag.setComplexVariable(gameController);
+        return frag;
+    }
+
+    public void setComplexVariable(GameController gameController) {
+        this.gameController = gameController;
+    }
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+
+            switch (which) {
+
+                case DialogInterface.BUTTON_NEUTRAL:
+                    intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
+                    startActivity(intent);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+
+                    if (gameController.getOnlineStatus() != ONLINE) {
+                        // se o jogo a decorrer era single player, faz reset de acordo
+                        if (!gameController.isLocalMultiplayerGame()) {
+                            gameController.resetGameData();
+                            gameController.initGameController();
+                            gameController.newSinglePlayerGame();
+                            gameController.setLocalMultiplayerGame(false);
+                            intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
+                            startActivity(intent);
+                        } else {
+                            gameController.resetGameData();
+                            gameController.initGameController();
+                            gameController.newLocalMultiPlayerGame();
+                            gameController.setLocalMultiplayerGame(true);
+                            intent = new Intent(getActivity().getApplicationContext(), SinglePlayerActivity.class);
+                            startActivity(intent);
+                        }
+                        // se era um jogo online
+                    } else{
+                        if (gameController.isWhat() == SERVER){
+
+                            gameController.resetGameData();
+                            gameController.initGameController();
+                            gameController.setWhat(SERVER);
+                            gameController.newLocalMultiPlayerGame();
+                            gameController.setOnlineStatus(ONLINE);
+                            gameController.setItMyTurn(true);
+                            gameController.setMyColor(WHITE);
+                            Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
+                            startActivity(intent);
+                        } else {
+                            gameController.resetGameData();
+                            gameController.initGameController();
+                            gameController.setWhat(CLIENT);
+                            gameController.newLocalMultiPlayerGame();
+                            gameController.setOnlineStatus(ONLINE);
+                            gameController.setItMyTurn(false);
+                            gameController.setMyColor(BLACK);
+                            Intent intent = new Intent(getActivity().getApplicationContext(), SetupOnlineActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+
+
+
+                    break;
+            }
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_discard_game, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+    };
 }

@@ -47,6 +47,7 @@ public class GameController extends Application{
     private GridAdapter gridViewBoard;
     private Piece selectedRook;      // ponteiro para a Torre usada no roque
     private boolean localMultiplayerGame;
+    private boolean gameRunning;
     // ONLINE
     private boolean what;
     private boolean onlineStatus;
@@ -83,6 +84,7 @@ public class GameController extends Application{
         this.selectedRook = null;
         this.localMultiplayerGame = false;
         this.myColor = WHITE;
+        this.gameRunning = false;
         // ONLINE
         this.onlineStatus = OFFLINE;
         this.what = SERVER;
@@ -98,6 +100,14 @@ public class GameController extends Application{
         this.isItMyTurn = false;
         this.handshakeCliente = "";
         this.handshakeServer = "";
+    }
+
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
+    public void setGameRunning(boolean gameRunning) {
+        this.gameRunning = gameRunning;
     }
 
     public void resetGameData(){
@@ -424,6 +434,7 @@ public class GameController extends Application{
             }
         }
         this.updateImages();
+        this.setGameRunning(true);
         return false;
     }
 
